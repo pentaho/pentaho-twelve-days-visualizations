@@ -22,7 +22,6 @@ pen.define([
     return vizUtil.registerVisualization('index', {
         type:    'time',
         source:  'Protovis',
-        menuOrdinal:   10305,
         needsColorGradient: false,
         customType: '',
         maxValues: [2000,2000,2000,5000],

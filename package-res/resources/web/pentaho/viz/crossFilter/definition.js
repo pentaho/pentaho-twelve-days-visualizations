@@ -22,8 +22,6 @@ pen.define([
     return vizUtil.registerVisualization('crossFilter', {
         type:   'multivariate', // generic type id
         source: 'crossfilter',  // id of the source library
-        menuSeparator: true,
-        menuOrdinal:   10320,
         needsColorGradient: false,
         customType: '',
         maxValues: [50000,50000,50000,50000],

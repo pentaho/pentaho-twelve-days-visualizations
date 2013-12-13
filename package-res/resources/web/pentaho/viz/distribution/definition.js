@@ -22,7 +22,6 @@ pen.define([
     return vizUtil.registerVisualization('distribution', {
         type:   'correlate',
         source: 'Protovis',
-        menuOrdinal:   10316,
         needsColorGradient: true,
         customType: '',
         maxValues: [200,200,200,500],

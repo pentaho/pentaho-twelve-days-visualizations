@@ -22,7 +22,6 @@ pen.define([
     return vizUtil.registerVisualization('parallelCoords', {
         type:    'multivariate',
         source:  'Protovis',
-        menuOrdinal:   10325,
         needsColorGradient: false,
         customType: '',
         maxValues: [2000,2000,2000,5000],

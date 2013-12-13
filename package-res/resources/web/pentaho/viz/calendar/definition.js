@@ -23,8 +23,6 @@ pen.define([
     return vizUtil.registerVisualization('calendar', {
         type:   'time',
         source: 'Protovis',
-        menuSeparator: true,
-        menuOrdinal:   10300, // Default value is 10000; place after GeoMap (that does not specify)
         needsColorGradient: true,
         customType: '',
         maxValues: [5000,5000,5000,5000],

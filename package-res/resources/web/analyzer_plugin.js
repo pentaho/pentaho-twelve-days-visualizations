@@ -1,18 +1,21 @@
 pen.define([
-    './pentaho/viz/util',
-    './pentaho/viz/calendar/definition',
-    './pentaho/viz/chord/definition',
-    './pentaho/viz/crossFilter/definition',
-    './pentaho/viz/distribution/definition',
-    './pentaho/viz/funnel/definition',
-    './pentaho/viz/index/definition',
-    './pentaho/viz/packedCircle/definition',
-    './pentaho/viz/parallelCoords/definition',
-    './pentaho/viz/sunBurst/definition',
-    './pentaho/viz/tagCloud/definition',
-    './pentaho/viz/treeMap/definition',
-    './pentaho/viz/trellis/definition',
-    './pentaho/viz/zoom/definition'
-], function() {
-    // NOOP
+    'require',
+    'json!./analyzer_plugin.config.json', // vizualizations config object
+    './pentaho/viz/util'
+], function(require, vizs) {
+
+    var prefix = './pentaho/viz/';
+    var suffix = '/definition';
+    return {
+        // Require active vizs dynamically.
+        load: function(name, req, callback) {
+            // name is ignored
+            var depMids = [];
+            for(var vizLocalId in vizs)
+                if(vizs[vizLocalId])
+                    depMids.push(prefix + vizLocalId + suffix);
+
+            require(depMids, function() { callback(null); });
+        }
+    };
 });

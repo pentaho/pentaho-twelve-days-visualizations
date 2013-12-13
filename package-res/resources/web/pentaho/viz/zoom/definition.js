@@ -21,7 +21,6 @@ pen.define([
     return vizUtil.registerVisualization('zoom', {
         type:    'time',      // generic type id
         source:  'Protovis',  // id of the source library
-        menuOrdinal: 10310,
         needsColorGradient: false,
         customType: '',
         maxValues: [50000,50000,50000,50000],

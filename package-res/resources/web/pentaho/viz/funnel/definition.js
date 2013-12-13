@@ -22,8 +22,6 @@ pen.define([
     return vizUtil.registerVisualization('funnel', {
         type:   'misc',
         source: 'Protovis',
-        menuSeparator: true,
-        menuOrdinal:   10340,
         needsColorGradient: true,
         customType: '',
         maxValues: [200,200,200,500],

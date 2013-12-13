@@ -22,8 +22,6 @@ pen.define([
     return vizUtil.registerVisualization('packedCircle', {
         type:   'hierarchy',
         source: 'Protovis',
-        menuSeparator: true,
-        menuOrdinal:   10350,
         needsColorGradient: true,
         maxValues: [2000,2000,2000,5000],
         getDropZoneLabel: function(type) {

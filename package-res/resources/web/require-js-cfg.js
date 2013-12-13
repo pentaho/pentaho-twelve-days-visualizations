@@ -72,4 +72,7 @@
     // Redirect all "jquery" module requires to the local "jquery" version.
     amd.map  [mid].jquery = localMid;
 
+    // Configure amd-plugins (text and json)
+    amd.paths['text'] = pluginPath + '/lib/amd-plugins/text';
+    amd.paths['json'] = pluginPath + '/lib/amd-plugins/json';
 } ());

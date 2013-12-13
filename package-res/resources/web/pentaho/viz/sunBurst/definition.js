@@ -22,7 +22,6 @@ pen.define([
     return vizUtil.registerVisualization('sunBurst', {
         type:   'hierarchy',
         source: 'Protovis',
-        menuOrdinal:   10355,
         needsColorGradient: true,
         customType: '',
         maxValues: [2000,2000,2000,5000],

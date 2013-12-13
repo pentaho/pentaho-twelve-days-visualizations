@@ -22,7 +22,6 @@ pen.define([
     return vizUtil.registerVisualization('trellis', {
         type:   'multivariate',
         source: 'Protovis',
-        menuOrdinal:   10330,
         needsColorGradient: false,
         customType: '',
         maxValues: [2000,2000,2000,5000],

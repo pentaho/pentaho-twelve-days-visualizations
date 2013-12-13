@@ -21,7 +21,6 @@ pen.define([
     return vizUtil.registerVisualization('tagCloud', {
         type:   'misc',                     // generic type id
         source: 'Protovis',                 // id of the source library
-        menuOrdinal:   10345,
         needsColorGradient: false,
         customType: '',
         maxValues: [50000,50000,50000,50000],

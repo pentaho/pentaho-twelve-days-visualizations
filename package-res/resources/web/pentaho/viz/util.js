@@ -24,6 +24,10 @@ pen.define([
     var pluginId = config.pluginId;
     var pluginJsId = config.pluginJsId;
 
+    var defaultVizType = 'misc';
+    var vizs = [];
+    var vizMenuInfoDirty = false;
+
     installDefaultPalette();
 
     // Common msg bundle.
@@ -50,6 +54,10 @@ pen.define([
             definition.id   = vizId;
             definition.name = pentaho.common.Messages.getString( vizName ); // visible name
             definition['class'] = 'pentaho.viz.' + vizName; // type of the Javascript object to instantiate
+            if(!definition.type) definition.type = defaultVizType;
+
+            vizs.push(definition);
+            vizMenuInfoDirty = true;
 
             pentaho.visualizations.push(definition);
 
@@ -63,6 +71,8 @@ pen.define([
                 pluginId:   pluginId, // TODO: remove if possible
 
                 init: function() {
+                    processMenuInfo();
+
                     // Register types to display in Analyzer
                     cv.pentahoVisualizations.push(definition);
 
@@ -567,5 +577,35 @@ pen.define([
 
         // NOTE: The fetch for the url is synchronous
         // and so the messages are now already available.
+    }
+
+    function compare(a, b) {
+        return (a === b) ? 0 : ((a > b) ? 1 : -1);
+    }
+
+    // var vizs = [];
+    function processMenuInfo() {
+        if(!vizMenuInfoDirty) return;
+
+        // 1 - viz type, alphabetically.
+        // 2 - viz name, alphabetically.
+        vizs.sort(function(va, vb) {
+            return compare(va.type, vb.type) || compare(va.name, vb.name);
+        });
+
+        // Default value is 10000; place after GeoMap (that does not specify)
+        var nextMenuOrdinal = 10500;
+        var prevType;
+        vizs.forEach(function(v) {
+            v.menuOrdinal = nextMenuOrdinal++;
+            if(!prevType || prevType !== v.type) {
+                prevType = v.type;
+                v.menuSeparator = true;
+            } else {
+                delete v.menuSeparator;
+            }
+        });
+
+        vizMenuInfoDirty = false;
     }
 });

@@ -21,8 +21,6 @@ pen.define([
     return vizUtil.registerVisualization('chord', {
         type:    'correlate',
         source:  'D3',
-        menuSeparator: true,
-        menuOrdinal:   10315,
         needsColorGradient: false,
         customType: '',
         maxValues: [2000,2000,2000,5000],

@@ -21,7 +21,6 @@
     return vizUtil.registerVisualization('treeMap', {
         type:   'hierarchy',
         source: 'Protovis',
-        menuOrdinal:   10360,
         needsColorGradient: false,
         customType: '',
         maxValues: [2000,2000,2000,5000],
