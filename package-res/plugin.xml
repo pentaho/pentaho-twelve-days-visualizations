@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin title="twelve-days-visualizations">
+
+  <!-- Twelve Days of Big Data Visualizations -->
+
+  <static-paths>
+    <static-path url="/twelve-days-visualizations/resources" localFolder="resources"/>
+  </static-paths>
+
+  <external-resources>
+    <file context="requirejs">content/twelve-days-visualizations/resources/web/require-js-cfg.js</file>
+    <file context="analyzer">content/twelve-days-visualizations/resources/web/analyzer_plugin_loader.js</file>
+
+    <!-- Calendar, Distribution, Funnel, PackedCircle, ParallelCoords, SunBurst, TagCloud, TreeMap -->
+    <!-- Tipsy.css -->
+
+    <!-- CrossFilter -->
+    <file context="analyzer">content/twelve-days-visualizations/resources/web/pentaho/viz/crossFilter/crossFilter.css</file>
+
+    <!-- CrossFilter, Parallel Coordinates, Trellis -->
+    <file context="analyzer">content/twelve-days-visualizations/resources/web/pentaho/viz/table.css</file>
+  </external-resources>
+
+</plugin>

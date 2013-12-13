@@ -1,0 +1,46 @@
+
+.chartOp {
+    font-size: 0.8em;
+    color: grey;
+    cursor: pointer;
+}
+
+#charts {
+  padding: 10px 0;
+}
+
+.chart {
+  display: inline-block;
+  width: 330px;
+  height: 130px;
+  margin-bottom: 20px;
+}
+
+
+.background.bar {
+  fill: #ccc;
+}
+
+.foreground.bar {
+  fillx: steelblue;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.brush rect.extent {
+  fillx: steelblue;
+  fill-opacity: .125;
+}
+
+.brush .resize path {
+  fill: #eee;
+  stroke: #666;
+}
