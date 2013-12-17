@@ -44,42 +44,42 @@ pen.define([
         this.rowsCols = [];
         this.measureCols = [];
         this.monthMap = {
-            1:'Jan',
-            2:'Feb',
-            3:'Mar',
-            4:'Apr',
-            5:'May',
-            6:'Jun',
-            7:'Jul',
-            8:'Aug',
-            9:'Sep',
-            10:'Oct',
-            11:'Nov',
-            12:'Dec',
-            'Jan':'Jan',
-            'Feb':'Feb',
-            'Mar':'Mar',
-            'Apr':'Apr',
-            'May':'May',
-            'Jun':'Jun',
-            'Jul':'Jul',
-            'Aug':'Aug',
-            'Sep':'Sep',
-            'Oct':'Oct',
-            'Nov':'Nov',
-            'Dec':'Dec',
-            'January':'Jan',
-            'February':'Feb',
-            'March':'Mar',
-            'April':'Apr',
-            'May':'May',
-            'June':'Jun',
-            'July':'Jul',
-            'August':'Aug',
-            'Septempber':'Sep',
-            'October':'Oct',
-            'November':'Nov',
-            'December':'Dec'
+            1:1,
+            2:2,
+            3:3,
+            4:4,
+            5:5,
+            6:6,
+            7:7,
+            8:8,
+            9:9,
+            10:10,
+            11:11,
+            12:12,
+            'Jan':1,
+            'Feb':2,
+            'Mar':3,
+            'Apr':4,
+            'May':5,
+            'Jun':6,
+            'Jul':7,
+            'Aug':8,
+            'Sep':9,
+            'Oct':10,
+            'Nov':11,
+            'Dec':12,
+            'January':1,
+            'February':2,
+            'March':3,
+            'April':4,
+            'May':5,
+            'June':6,
+            'July':7,
+            'August':8,
+            'Septempber':9,
+            'October':10,
+            'November':11,
+            'December':12
         };
 
         this.init();
@@ -287,7 +287,7 @@ pen.define([
         if( doFocus ) {
             var focus = vis.add(pv.Panel)
                 .def("init", function(n) {
-                console.log('focus.init',this.parent.viz);
+                    console.log('focus.init',this.parent.viz);
 
                     var measureNo = typeof n == "undefined" ? this.parent.viz.data.length-1 : n;
                     var data = this.parent.viz.data[measureNo];
@@ -308,7 +308,10 @@ pen.define([
             /* X-axis ticks. */
             if( this.debug ) console.log('pentaho.viz.Zoom.draw creating x-axis');
             focus.add(pv.Rule)
-                .data(function() { return this.parent.parent.viz.fx.ticks( Math.min(this.parent.parent.viz.data[0].length-1,this.parent.parent.viz.nContextLabels)) })
+                .data(function() {
+                    var viz = this.parent.parent.viz;
+                    return viz.fx.ticks( Math.min(viz.data[0].length-1, viz.nContextLabels) );
+                })
                 .left(this.fx)
                 .strokeStyle("#eee")
                 .bottom(0)
@@ -611,6 +614,21 @@ pen.define([
 
         }
 
+        function compare(a, b) {
+            return (a === b) ? 0 : ((a > b) ? 1 : -1);
+        }
+
+        for( var colNo=0; colNo< this.measureCols.length; colNo++ ) {
+            this.data[colNo].sort(function(a, b) {
+                return compare(+a.dateObj, +b.dateObj) ||
+                       compare( a.x,        b.x      );
+            });
+
+            this.data[colNo].forEach(function(item, index) {
+                item.x = index;
+            })
+        }
+
         if( this.debug) console.log("data", this.data);
     }
 
@@ -682,10 +700,11 @@ pen.define([
         var d1 = this.x.invert(this.i.x);
         var d2 = this.x.invert(this.i.x + this.i.dx);
         this.startRow = Math.floor(d1);
-        this.endRow = Math.floor(d2);
+        this.endRow   = Math.floor(d2);
         var dd = data.slice(
-                Math.max(0, pv.search.index(data, d1, function(d) { return d.x }) - 1),
-                pv.search.index(data, d2, function(d) { return d.x }) + 1);
+                Math.max(0,
+                    pv.search.index(data, d1, function(d) { return d.x }) - 1),
+                    pv.search.index(data, d2, function(d) { return d.x }) + 1);
         this.fx.domain(d1, d2);
         this.fy.domain(this.fixedyaxis == 'fixed' ? this.y.domain() : [0, pv.max(dd, function(d) { return d.y })] );
         return dd;
