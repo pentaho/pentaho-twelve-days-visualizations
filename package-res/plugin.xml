@@ -12,7 +12,7 @@
     <file context="requirejs">content/twelve-days-visualizations/resources/web/require-js-cfg.js</file>
     <file context="analyzer">content/twelve-days-visualizations/resources/web/analyzer_plugin_loader.js</file>
 
-    <!-- Calendar, Distribution, Funnel, PackedCircle, ParallelCoords, SunBurst, TagCloud, TreeMap -->
+    <!-- Calendar, Funnel, PackedCircle, ParallelCoords, SunBurst, TagCloud, TreeMap -->
     <!-- Tipsy.css -->
 
     <!-- CrossFilter -->
