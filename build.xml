@@ -26,6 +26,14 @@
       THE TASKS THAT NEED TO DIFFER FROM THE DEFAULT IMPLEMENTATION OF THE TASKS
       FOUND IN common_build.xml.
     -->
+    
+    <!-- Remove this if we add sources -->
+  <target name="jar"
+            depends="init"
+          description="Jars up the bin directory after a compile">
+  </target>
+
+
 
   <target name="install">
     <deltree dir="${install.target-dir}/pentaho-solutions/system/${plugin_install_dir}"/>
