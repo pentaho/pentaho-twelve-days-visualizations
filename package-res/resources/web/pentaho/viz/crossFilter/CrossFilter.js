@@ -17,8 +17,8 @@
 pen.define([
     '../util',
     'd3',
-    'crossfilter'
-], function(vizUtil, d3, crossfilter) {
+    'crossfilter', "dojo/_base/lang"
+], function(vizUtil, d3, crossfilter, lang) {
 
     var chart;
     var list;
@@ -333,7 +333,7 @@ pen.define([
                 .each(function(chart) { chart.on("brush", crossFilterWrapper.renderAll).on("brushend", crossFilterWrapper.renderAll); });
         }
         list = d3.selectAll(".datatable")
-          .data([dojo.hitch(this,this.updateTable)]);
+          .data([lang.hitch(this,this.updateTable)]);
 
         this.renderAll();
 

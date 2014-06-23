@@ -18,9 +18,10 @@ pen.define([
     '../util',
     'jquery',
     'cdf/lib/CCC/protovis',
+    'dojo/_base/lang',
     'cdf/lib/CCC/protovis-msie',
     'cdf/lib/CCC/tipsy'
-], function(vizUtil, $, pv) {
+], function(vizUtil, $, pv, lang) {
 
     pentaho.viz.Funnel = function( div ) {
 
@@ -336,7 +337,7 @@ pen.define([
                         var width = d.value * this.parent.width() / 100;
                         return width;
                     } )
-                    .fillStyle( dojo.hitch( this, function(d) {
+                    .fillStyle( lang.hitch( this, function(d) {
                         var color = pv.color( this.colors[d.index % this.colors.length] );
                         console.log(d.meta);
                         if(this.highLightsSet && !this.highlights[d.meta.rowIdx]) {
@@ -344,7 +345,7 @@ pen.define([
                         }
                         return color;
                     }))
-                    .strokeStyle(dojo.hitch( this, function(d) {
+                    .strokeStyle(lang.hitch( this, function(d) {
                         return d == this.mouseOverNode ? "#000000" : pv.color( this.colors[d.index % this.colors.length] );
                     } ) )
                     .lineWidth(2)
@@ -446,7 +447,7 @@ pen.define([
             this.pendingSelection = args;
             // start a double click timer
 
-            this.doubleClickTimer = setTimeout( dojo.hitch(this, this.toggleGroup), 300 );
+            this.doubleClickTimer = setTimeout( lang.hitch(this, this.toggleGroup), 300 );
 
         };
 

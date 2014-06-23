@@ -21,9 +21,10 @@ pen.define([
     '../VizController',
     'cdf/lib/CCC/protovis',
     'layoutCloud',
+    'dojo/_base/lang',
     'cdf/lib/CCC/protovis-msie',
     'cdf/lib/CCC/tipsy'
-], function(vizUtil, VizController, pv, LayoutCloud) {
+], function(vizUtil, VizController, pv, LayoutCloud, lang) {
 
     /*
         constructor
@@ -258,10 +259,10 @@ pen.define([
         if( this.debug ) console.log('pentaho.viz.TagCloud.draw creating text');
         var tagCloud = vis3.add(LayoutCloud.Text)
             .nodes(this.data)
-            .textStyle(dojo.hitch( this, function(d) {
+            .textStyle(lang.hitch( this, function(d) {
                 return (this.colorText && this.colorCol != -1) ? this.getColor(d) : this.labelColor;
             }) )
-            .font(dojo.hitch( this, function(d) {
+            .font(lang.hitch( this, function(d) {
                 var size = 25;
                 if( this.sizeCol != -1 ) {
                     size = Math.floor(10+40*((d.sizeValue-this.minSize)/this.sizeRange));
@@ -275,7 +276,7 @@ pen.define([
         if( this.debug ) console.log('pentaho.viz.TagCloud.draw creating bars');
         if( !this.colorText ) {
             tagCloud.node.add(pv.Bar)
-                .fillStyle( dojo.hitch( this, function(d) {
+                .fillStyle( lang.hitch( this, function(d) {
                     return this.colorText ? "none" : this.getColor(d)
                 }) )
                 .strokeStyle(function(d) {
@@ -296,9 +297,9 @@ pen.define([
             .title( function(){ return "";} ) // Prevent browser tooltip
             .text(function(d){ return d && d.meta ? d.meta.tooltip : ""; })
             .events("all")
-            .event('click', dojo.hitch( this, function(d) { this.mouseClick(d); } ) )
-            .event('mouseover', dojo.hitch( this, function(d) { this.mouseMove(d); } ) )
-            .event('mouseout', dojo.hitch( this, function(d) { this.mouseOut(d); } ) )
+            .event('click', lang.hitch( this, function(d) { this.mouseClick(d); } ) )
+            .event('mouseover', lang.hitch( this, function(d) { this.mouseMove(d); } ) )
+            .event('mouseout', lang.hitch( this, function(d) { this.mouseOut(d); } ) )
             .event('mousemove', pv.Behavior.tipsy(tipOptions) )
             ;
 
@@ -366,7 +367,7 @@ pen.define([
         this.pendingSelection = args;
         // start a double click timer
 
-        this.doubleClickTimer = setTimeout( dojo.hitch(this, this.toggleGroup), 300 );
+        this.doubleClickTimer = setTimeout( lang.hitch(this, this.toggleGroup), 300 );
 
     };
 

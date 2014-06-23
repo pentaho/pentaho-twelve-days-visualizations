@@ -18,8 +18,9 @@
 pen.define([
     '../util',
     'cdf/lib/CCC/protovis',
+    'dojo/_base/lang',
     'cdf/lib/CCC/protovis-msie'
-], function(vizUtil, pv) {
+], function(vizUtil, pv, lang) {
 
     pentaho.viz.Trellis = function( div ) {
 
@@ -465,7 +466,7 @@ pen.define([
                     localThis.s = null;
                     return vis;
                 } )
-               .event("select", dojo.hitch( this, this.update ) )
+               .event("select", lang.hitch( this, this.update ) )
              .add(pv.Bar)
                .visible(function(d, k, t) {
                     var s = localThis.s;
@@ -479,7 +480,7 @@ pen.define([
                .strokeStyle("white")
                .cursor("move")
                .event("mousedown", pv.Behavior.drag())
-               .event("drag", dojo.hitch( this, this.update ) );
+               .event("drag", lang.hitch( this, this.update ) );
 
             /* Labels along the diagonal. */
             if( this.debug ) console.log('creating diagonal labels');

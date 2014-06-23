@@ -19,6 +19,7 @@ pen.define([
     '../util',
     'cdf/lib/CCC/protovis',
     'jquery',
+    'dojo/_base/lang',
     'cdf/lib/CCC/protovis-msie',
     'cdf/lib/CCC/tipsy'
 ], function(vizUtil, pv, $) {
@@ -431,7 +432,7 @@ pen.define([
             this.pendingSelection = args;
             // start a double click timer
 
-            this.doubleClickTimer = setTimeout( dojo.hitch(this, this.toggleGroup), 300 );
+            this.doubleClickTimer = setTimeout( lang.hitch(this, this.toggleGroup), 300 );
 
         };
 

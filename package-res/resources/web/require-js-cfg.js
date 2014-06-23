@@ -41,7 +41,7 @@
     // Configure "crossfilter"
     // The local mid should not to be used directly. Just require 'crossfilter'.
     localMid = mid + '/lib/crossfilter';
-    amd.paths[localMid] = pluginPath + '/lib/crossFilter/crossfilter.v1.min';
+    amd.paths[localMid] = pluginPath + '/lib/crossfilter/crossfilter.v1.min';
     amd.shim [localMid] = {
         exports: 'crossfilter',
         deps:    ['d3']

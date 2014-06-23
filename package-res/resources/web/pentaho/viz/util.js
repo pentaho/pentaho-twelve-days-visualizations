@@ -17,8 +17,8 @@
 pen.define([
     'require',
     'module',
-    './VizController',
-], function(require, module, VizController) {
+    './VizController', "dojo/_base/lang", "dojo/on", "dojo/_base/declare", "pentaho/common/Messages", "dojo/aspect"
+], function(require, module, VizController, lang, on, declare, Messages, aspect) {
 
     var config = module.config() || {};
     var pluginId = config.pluginId;
@@ -114,7 +114,7 @@ pen.define([
 
                     var vizConfigTypeName = this.vizId + "Config";
 
-                    dojo.declare("analyzer." + vizConfigTypeName, [analyzer.LayoutConfig], {
+                    declare("analyzer." + vizConfigTypeName, [analyzer.LayoutConfig], {
 
                         onModelEvent: function (config, item, eventName, args) {
                             var chart, vizArgs, eventFunc, func, result;
@@ -127,7 +127,7 @@ pen.define([
                                     eventFunc = item.id + "Changed";
                                     vizArgs.configAction = eventFunc;
                                     chart = this.report.visualizationController.chart;
-                                    func  = dojo.hitch(chart, chart[eventFunc]);
+                                    func  = lang.hitch(chart, chart[eventFunc]);
                                     if( func && typeof func == "function" ) {
                                         result = func(args.newVal);
                                         if( result ) { return; }
@@ -140,7 +140,7 @@ pen.define([
                                 eventFunc = item.id + "Clicked"
                                 vizArgs.configAction = eventFunc;
                                 chart = this.report.visualizationController.chart;
-                                func = dojo.hitch(chart, chart[eventFunc]);
+                                func = lang.hitch(chart, chart[eventFunc]);
                                 if( func && typeof func == "function" ) {
                                     result = func();
                                     if( result ) { return; }
@@ -166,7 +166,7 @@ pen.define([
                     analyzer.LayoutPanel.configurationManagers
                     ["JSON_" + this.vizId] = analyzer[vizConfigTypeName];
 
-                    dojo.connect(analyzer[vizConfigTypeName], "onClick", function (item, eventName, args) { });
+                    aspect.after(analyzer[vizConfigTypeName], "onClick", function (item, eventName, args) { });
                 } // end init
             } ); // analyzerPlugins.push
 
@@ -566,9 +566,8 @@ pen.define([
     }
 
     function registerMsgBundle( bundleId, relativePath ) {
-        dojo.require("pentaho.common.Messages");
-
-        pentaho.common.Messages.addUrlBundle(
+        
+        Messages.addUrlBundle(
             bundleId,
             CONTEXT_PATH + 'i18n?plugin=' + pluginId +
             '&name=resources/web/' +

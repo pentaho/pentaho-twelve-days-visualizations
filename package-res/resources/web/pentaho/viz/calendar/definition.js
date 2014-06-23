@@ -16,9 +16,15 @@
  */
 pen.define([
     '../util',
+    'pentaho/common/propertiesPanel/Panel',
     '../../common/propertiesPanel/ColorPicker',
     '../../common/propertiesPanel/GradientPicker'
-], function(vizUtil) {
+], function(vizUtil, Panel, ColorPicker, GradientPicker) {
+
+    // TODO: Patch bug in 5.1 propertiesPanel/Panel
+    Panel.onUIEvent = function (type, args) {
+        on.emit(this, type, args);
+    };
 
     return vizUtil.registerVisualization('calendar', {
         type:   'time',

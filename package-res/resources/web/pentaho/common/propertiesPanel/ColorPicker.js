@@ -14,36 +14,54 @@
  *
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
-pen.define(['./ColorBox'], function() {
-
-    dojo.provide("pentaho.common.propertiesPanel.ColorPicker");
-    dojo.require("dijit._Widget");
-    dojo.require("dijit._Templated");
-    dojo.require("pentaho.common.Messages");
-    dojo.require("pentaho.common.propertiesPanel.Panel");
-    dojo.require("pentaho.common.propertiesPanel.Configuration");
-
-    dojo.declare("pentaho.common.propertiesPanel.ColorPicker", [
-        dijit._Widget,
-        dijit._Templated,
-        pentaho.common.propertiesPanel.StatefulUI
+pen.define(["dojo/_base/declare", "dojo/on", "dojo/_base/lang", "dijit/_Widget", "dijit/_TemplatedMixin","dijit/_WidgetsInTemplateMixin", "pentaho/common/Dialog", "dijit/ColorPalette", "../ColorDialog", "dojo/dom-style", "./ColorBox", "pentaho/common/Messages",
+"pentaho/common/propertiesPanel/Panel",
+"pentaho/common/propertiesPanel/Configuration"], function(declare, on, lang, Widget, TemplatedMixin, _WidgetsInTemplateMixin, Dialog, ColorPalette, ColorDialog, style, ColorBox, Messages, Panel, Configuration) {
+    // StatefuUI copied from common-ui pentaho/common/propertiesPanel/Panel.js as it is no longer public there. Remove once it is again public.
+    var StatefulUI = declare(
+        [],
+        {
+          constructor: function (options) {
+            this.model = options.model;
+            this.propPanel = options.propPanel;
+            var outterThis = this;
+            this.model.watch(function (propName, prevVal, newVal) {
+    
+              switch (propName) {
+                case "value":
+                case "default":
+                  outterThis.set(propName, newVal);
+                  break;
+              }
+            });
+          },
+          onUIEvent: function (type, args) {
+    
+          }
+        }
+    );
+    
+    var ColorPicker = declare("pentaho.common.propertiesPanel.ColorPicker", [
+        Widget,
+        TemplatedMixin,
+        _WidgetsInTemplateMixin,
+        StatefulUI
     ],
     {
-        widgetsInTemplate: true,
         value: "none",
         templateString: "<div><table><tr><td><div dojoAttachPoint='colorBox' dojoType='pentaho.common.propertiesPanel.ColorBox'></div></td><td style='padding-left: 5px'><label for='${model.id}_colorbox'>${label}</label></rd></tr></table></div>",
 
         constructor: function (options) {
             console.log('ColorPicker.constructor');
             this.disabled = this.model.disabled;
-            this.label = pentaho.common.Messages.getString(this.model.ui.label, this.model.ui.label);
+            this.label = Messages.getString(this.model.ui.label, this.model.ui.label);
             this.inherited(arguments);
         },
 
         postCreate: function(){
             console.log('ColorPicker.postCreate');
             this.value = this.model.value;
-            dojo.style(this.colorBox.domNode,"background-color",this.value);
+            style.set(this.colorBox.domNode,"background-color",this.value);
             this.colorBox.registerOkFunc(dojo.hitch( this, "onClick") );
         },
 
@@ -51,7 +69,7 @@ pen.define(['./ColorBox'], function() {
             console.log('ColorPicker.onClick');
             if( color != null && color != this.value ) {
                 this.value = color;
-                dojo.style(this.colorBox,"background-color",this.value);
+                style.set(this.colorBox,"background-color",this.value);
                 this.model.set('value', this.value);
             }
         },
@@ -60,14 +78,14 @@ pen.define(['./ColorBox'], function() {
             console.log('ColorPicker.set '+prop, newVal);
             if(this.colorBox){
               if(prop == "value" && newVal != this.value){
-                dojo.style(this.colorBox,"background-color",this.value);
+                style.set(this.colorBox,"background-color",this.value);
               }
             }
         }
     });
 
-    pentaho.common.propertiesPanel.Panel.registeredTypes["colorpicker"] = pentaho.common.propertiesPanel.ColorPicker;
-    pentaho.common.propertiesPanel.Configuration.registeredTypes["colorpicker"] = pentaho.common.propertiesPanel.Property;
+    Panel.registeredTypes["colorpicker"] = ColorPicker;
+    Configuration.registeredTypes["colorpicker"] = pentaho.common.propertiesPanel.Property;
 
-    return pentaho.common.propertiesPanel.ColorPicker;
+    return ColorPicker;
 });

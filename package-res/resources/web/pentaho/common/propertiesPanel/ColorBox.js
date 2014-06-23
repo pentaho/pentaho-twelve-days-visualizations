@@ -14,18 +14,14 @@
  *
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
-pen.define(['../ColorDialog'], function(ColorDialog) {
-
-    dojo.provide("pentaho.common.propertiesPanel.ColorBox");
-    dojo.require("dijit._Widget");
-    dojo.require("dijit._Templated");
-
-    dojo.declare("pentaho.common.propertiesPanel.ColorBox", [
-        dijit._Widget,
-        dijit._Templated
+pen.define( ["dojo/_base/declare", "dojo/on", "dojo/_base/lang", "dijit/_Widget", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "pentaho/common/Dialog", "dijit/ColorPalette", "../ColorDialog", "dojo/dom-style"], function(declare, on, lang, Widget, TemplatedMixin, _WidgetsInTemplateMixin, Dialog, ColorPalette, ColorDialog, style) {
+    
+    return declare("pentaho.common.propertiesPanel.ColorBox", [
+        Widget,
+        TemplatedMixin,
+        _WidgetsInTemplateMixin
     ],
     {
-        widgetsInTemplate: false,
         value: "none",
         okFunc: null,
         templateString: "<div style='width:20px; height: 20px; background-color: none; cursor: pointer; border: 1px solid #808080;' dojoAttachPoint='colorBox'>&nbsp;</div>",
@@ -36,8 +32,8 @@ pen.define(['../ColorDialog'], function(ColorDialog) {
 
         postCreate: function(){
             console.log('ColorBox.postCreate');
-            dojo.style(this.colorBox,"background-color",this.value);
-            this.connect(this.colorBox, "onclick", "onClick");
+            style.set(this.colorBox,"background-color",this.value);
+            on(this.colorBox, "click", lang.hitch(this, "onClick"));
 
         },
 
@@ -47,7 +43,7 @@ pen.define(['../ColorDialog'], function(ColorDialog) {
             if( !ColorDialog.dialog ) {
                 ColorDialog.dialog = new ColorDialog();
             }
-            var func = dojo.hitch( this, function() { this.colorsChanged() } );
+            var func = lang.hitch( this, function() { this.colorsChanged() } );
             ColorDialog.dialog.registerOnSuccessCallback( func );
             ColorDialog.dialog.show();
         },
@@ -62,7 +58,7 @@ pen.define(['../ColorDialog'], function(ColorDialog) {
             var color = ColorDialog.dialog.color;
             if( color != null && color != this.value ) {
                 this.value = color;
-                dojo.style(this.colorBox,"background-color",this.value);
+                style.set(this.colorBox,"background-color",this.value);
                 if( this.okFunc ) {
                     this.okFunc(color);
                 }
@@ -73,12 +69,11 @@ pen.define(['../ColorDialog'], function(ColorDialog) {
             console.log('ColorBox.set');
             if(this.colorBox) {
               if(prop == "value" && newVal != this.value) {
-                dojo.style(this.colorBox,"background-color",this.value);
+                style.set(this.colorBox,"background-color",this.value);
               }
             }
 
         }
     });
 
-    return pentaho.common.propertiesPanel.ColorBox;
 });

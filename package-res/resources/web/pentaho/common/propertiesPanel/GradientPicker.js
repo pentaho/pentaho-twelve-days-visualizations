@@ -14,22 +14,40 @@
  *
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
-pen.define(['./ColorBox'], function() {
-
-    dojo.provide("pentaho.common.propertiesPanel.GradientPicker");
-    dojo.require("dijit._Widget");
-    dojo.require("dijit._Templated");
-    dojo.require("pentaho.common.Messages");
-    dojo.require("pentaho.common.propertiesPanel.Panel");
-    dojo.require("pentaho.common.propertiesPanel.Configuration");
-
-    dojo.declare("pentaho.common.propertiesPanel.GradientPicker", [
-        dijit._Widget,
-        dijit._Templated,
-        pentaho.common.propertiesPanel.StatefulUI
+ pen.define(["dojo/_base/declare", "dojo/on", "dojo/_base/lang", "dijit/_Widget", "dijit/_TemplatedMixin","dijit/_WidgetsInTemplateMixin", "pentaho/common/Dialog", "dijit/ColorPalette", "../ColorDialog", "dojo/dom-style", "./ColorBox", "pentaho/common/Messages",
+    "pentaho/common/propertiesPanel/Panel",
+    "pentaho/common/propertiesPanel/Configuration"], function(declare, on, lang, Widget, TemplatedMixin,WidgetsInTemplateMixin, Dialog, ColorPalette, ColorDialog, style, ColorBox, Messages, Panel, Configuration) {
+    // StatefuUI copied from common-ui pentaho/common/propertiesPanel/Panel.js as it is no longer public there. Remove once it is again public.
+    var StatefulUI = declare(
+        [],
+        {
+          constructor: function (options) {
+            this.model = options.model;
+            this.propPanel = options.propPanel;
+            var outterThis = this;
+            this.model.watch(function (propName, prevVal, newVal) {
+    
+              switch (propName) {
+                case "value":
+                case "default":
+                  outterThis.set(propName, newVal);
+                  break;
+              }
+            });
+          },
+          onUIEvent: function (type, args) {
+    
+          }
+        }
+    );
+    
+    var GradientPicker = declare("pentaho.common.propertiesPanel.GradientPicker", [
+        Widget,
+        TemplatedMixin,
+        WidgetsInTemplateMixin,
+        StatefulUI
     ],
     {
-        widgetsInTemplate: true,
         value: {
             color1: "red",
             color2: "yellow",
@@ -40,7 +58,7 @@ pen.define(['./ColorBox'], function() {
         templateString: "<div><fieldset><legend class='pentaho-fieldset-pane-title'>${label}</legend><table><tr><td><table><tr><td><div dojoAttachPoint='colorBox1' dojoType='pentaho.common.propertiesPanel.ColorBox'></div></td></tr><tr><td><div dojoAttachPoint='colorBox2' dojoType='pentaho.common.propertiesPanel.ColorBox'></div></td></tr><tr><td><div dojoAttachPoint='colorBox3' dojoType='pentaho.common.propertiesPanel.ColorBox'></div></td></tr></table></td><td><table><tr><td>-&nbsp;<input type='text' dojoAttachPoint='threshold1Edit' class='input' style='width:75px; text-align:right'/></div></td></tr><tr><td>-&nbsp;<input type='text' dojoAttachPoint='threshold2Edit' id='' style='width:75px; text-align:right'/></td></tr></table></td></tr></table></fieldset></div>",
         constructor:function (options) {
             this.disabled = this.model.disabled;
-            this.label = pentaho.common.Messages.getString(this.model.ui.label,this.model.ui.label);
+            this.label = Messages.getString(this.model.ui.label,this.model.ui.label);
             this.inherited(arguments);
         },
 
@@ -51,14 +69,14 @@ pen.define(['./ColorBox'], function() {
             this.colorBox1.value = this.value.color1;
             this.colorBox2.value = this.value.color2;
             this.colorBox3.value = this.value.color3;
-            this.connect(this.threshold1Edit, "onchange", dojo.hitch(this, this.onChange));
-            this.connect(this.threshold2Edit, "onchange", dojo.hitch(this, this.onChange));
-            dojo.style(this.colorBox1.domNode,"background-color",this.value.color1);
-            dojo.style(this.colorBox2.domNode,"background-color",this.value.color2);
-            dojo.style(this.colorBox3.domNode,"background-color",this.value.color3);
-            this.colorBox1.registerOkFunc(dojo.hitch( this, "onChange") );
-            this.colorBox2.registerOkFunc(dojo.hitch( this, "onChange") );
-            this.colorBox3.registerOkFunc(dojo.hitch( this, "onChange") );
+            on(this.threshold1Edit, "change", lang.hitch(this, this.onChange));
+            on(this.threshold2Edit, "change", lang.hitch(this, this.onChange));
+            style.set(this.colorBox1.domNode,"background-color",this.value.color1);
+            style.set(this.colorBox2.domNode,"background-color",this.value.color2);
+            style.set(this.colorBox3.domNode,"background-color",this.value.color3);
+            this.colorBox1.registerOkFunc(lang.hitch( this, "onChange") );
+            this.colorBox2.registerOkFunc(lang.hitch( this, "onChange") );
+            this.colorBox3.registerOkFunc(lang.hitch( this, "onChange") );
         },
 
         onChange: function(){
@@ -79,9 +97,9 @@ pen.define(['./ColorBox'], function() {
             if(this.colorBox1){
                 if(prop == "value"){
                     this.value = newVal;
-                    dojo.style(this.colorBox1,"background-color",this.value.color1);
-                    dojo.style(this.colorBox2,"background-color",this.value.color2);
-                    dojo.style(this.colorBox3,"background-color",this.value.color3);
+                    style.set(this.colorBox1,"background-color",this.value.color1);
+                    style.set(this.colorBox2,"background-color",this.value.color2);
+                    style.set(this.colorBox3,"background-color",this.value.color3);
                     this.threshold1Edit.value = this.value.threshold1;
                     this.threshold2Edit.value = this.value.threshold2;
                 }
@@ -89,8 +107,8 @@ pen.define(['./ColorBox'], function() {
         }
     });
 
-    pentaho.common.propertiesPanel.Panel.registeredTypes["gradientpicker"] = pentaho.common.propertiesPanel.GradientPicker;
-    pentaho.common.propertiesPanel.Configuration.registeredTypes["gradientpicker"] = pentaho.common.propertiesPanel.Property;
+    Panel.registeredTypes["gradientpicker"] = GradientPicker;
+    Configuration.registeredTypes["gradientpicker"] = pentaho.common.propertiesPanel.Property;
 
-    return pentaho.common.propertiesPanel.GradientPicker;
+    return GradientPicker;
 });

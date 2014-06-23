@@ -19,9 +19,10 @@ pen.define([
     'jquery',
     '../VizController',
     'cdf/lib/CCC/protovis',
+    'dojo/_base/lang',
     'cdf/lib/CCC/protovis-msie',
     'cdf/lib/CCC/tipsy'
-], function(vizUtil, $, VizController, pv) {
+], function(vizUtil, $, VizController, pv, lang) {
 
     pentaho.viz.PackedCircle = function( div ) {
 
@@ -111,6 +112,7 @@ pen.define([
                     break;
                 }
             }
+            this.pack.reset();
             this.rootPanel.render();
 
         };
@@ -318,6 +320,7 @@ pen.define([
                 .font(this.labelFontStr);
 
             if( this.debug ) console.log('rendering');
+            this.pack.reset();
             this.rootPanel.render();
 
         };
@@ -325,12 +328,14 @@ pen.define([
         this.mouseMove = function( d, t ) {
             if( this.debug ) console.log( "PackedCircle mouseMove()", d );
             this.mouseOverWedge = d;
+            this.pack.reset();
             this.rootPanel.render();
         };
 
         this.mouseOut = function( d, t ) {
             if( this.debug ) console.log( "PackedCircle mouseOut()", d );
             this.mouseOverWedge = null;
+            this.pack.reset();
             this.rootPanel.render();
         };
 
@@ -390,7 +395,7 @@ pen.define([
             this.pendingSelection = args;
             // start a double click timer
 
-            this.doubleClickTimer = setTimeout( dojo.hitch(this, this.toggleGroup), 300 );
+            this.doubleClickTimer = setTimeout( lang.hitch(this, this.toggleGroup), 300 );
 
         };
 

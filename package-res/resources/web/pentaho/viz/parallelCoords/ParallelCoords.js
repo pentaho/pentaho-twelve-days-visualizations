@@ -20,9 +20,10 @@ pen.define([
     '../VizController',
     'cdf/lib/CCC/protovis',
     'jquery',
+    'dojo/_base/lang',
     'cdf/lib/CCC/protovis-msie',
     'cdf/lib/CCC/tipsy'
-], function(vizUtil, VizController, pv, $) {
+], function(vizUtil, VizController, pv, $, lang) {
 
     pentaho.viz.ParallelCoords = function( div ) {
 
@@ -176,7 +177,7 @@ pen.define([
 
             this.x = pv.Scale.ordinal(this.dims).splitFlush(0, this.w);
 
-            this.y = pv.dict(this.dims, dojo.hitch( this,
+            this.y = pv.dict(this.dims, lang.hitch( this,
                 function(t) {
                     return pv.Scale.linear(
                         this.dataObj.filter(
@@ -188,7 +189,7 @@ pen.define([
                 } )
             );
 
-            this.c = pv.dict(this.dims, dojo.hitch( this,
+            this.c = pv.dict(this.dims, lang.hitch( this,
                     function(t) {
                         return pv.Scale.linear(
                             this.dataObj.filter(
@@ -201,7 +202,7 @@ pen.define([
                 );
 
             /* Interaction state. */
-            this.filter = pv.dict(this.dims, dojo.hitch( this, function(t) {
+            this.filter = pv.dict(this.dims, lang.hitch( this, function(t) {
                 return {min: this.y[t].domain()[0], max: this.y[t].domain()[1]};
               }) );
             this.active = this.defaultMeasure;
@@ -233,7 +234,7 @@ pen.define([
             // The parallel coordinates display.
             vis.add(pv.Panel)
                 .data(this.dataObj)
-                .visible( dojo.hitch( this,
+                .visible( lang.hitch( this,
                     function(d) {
                         var visible = true;
                         for( var idx=0; idx<this.dims.length; idx++ ) {
@@ -241,7 +242,7 @@ pen.define([
                             visible &= (d[t] >= this.filter[t].min) && (d[t] <= this.filter[t].max);
                         }
                         return visible;
-                        var obj = this.dims.every( dojo.hitch( this,
+                        var obj = this.dims.every( lang.hitch( this,
                             function(t) {
                                 return (d[t] >= this.filter[t].min) && (d[t] <= this.filter[t].max);
                             }
@@ -252,8 +253,8 @@ pen.define([
                 )
               .add(pv.Line)
                 .data(this.dims)
-                .left(dojo.hitch( this, function(t, d) { return this.x(t); }) )
-                .bottom(dojo.hitch( this, function(t, d) { return this.y[t](d[t]); } ) )
+                .left(lang.hitch( this, function(t, d) { return this.x(t); }) )
+                .bottom(lang.hitch( this, function(t, d) { return this.y[t](d[t]); } ) )
                 .strokeStyle("#ddd")
                 .lineWidth(1)
                 .antialias(false)
@@ -269,14 +270,14 @@ pen.define([
                 .top(-12)
                 .font(this.labelFontStr)
                 .textStyle(this.labelColor)
-                .text(dojo.hitch( this, function(d) { return this.measures[d].name }));
+                .text(lang.hitch( this, function(d) { return this.measures[d].name }));
 
             // The parallel coordinates display.
             this.change = vis.add(pv.Panel);
 
             var line = this.change.add(pv.Panel)
                 .data(this.dataObj)
-                .visible( dojo.hitch( this,
+                .visible( lang.hitch( this,
                     function(d) {
                         var visible = true;
                         for( var idx=0; idx<this.dims.length; idx++ ) {
@@ -291,9 +292,9 @@ pen.define([
                 )
               .add(pv.Line)
                 .data(this.dims)
-                .left(dojo.hitch( this, function(t, d) { return this.x(t); }) )
-                .bottom(dojo.hitch( this, function(t, d) { return this.y[t](d[t]); }) )
-                .strokeStyle(dojo.hitch( this, function(t, d) { return this.c[this.active](d[this.active]); } ) )
+                .left(lang.hitch( this, function(t, d) { return this.x(t); }) )
+                .bottom(lang.hitch( this, function(t, d) { return this.y[t](d[t]); }) )
+                .strokeStyle(lang.hitch( this, function(t, d) { return this.c[this.active](d[this.active]); } ) )
                 .lineWidth(1)
                 .text(function(t, d) { return d.tooltip; } )
                 .title("")
@@ -301,44 +302,44 @@ pen.define([
                 .event('mousemove', pv.Behavior.tipsy(tipOptions) )
                 ;
 
-        this.handles = this.dims.map(dojo.hitch( this, function(dim) { return {y:0, dy:this.h, dim:dim}; }));
+        this.handles = this.dims.map(lang.hitch( this, function(dim) { return {y:0, dy:this.h, dim:dim}; }));
         /* Handle select and drag */
         var handle = this.change.add(pv.Panel)
             .data(this.handles)
-            .left(dojo.hitch( this, function(t) { return this.x(t.dim) - 30 }) )
+            .left(lang.hitch( this, function(t) { return this.x(t.dim) - 30 }) )
             .width(60)
             .fillStyle("rgba(0,0,0,.001)")
             .cursor("crosshair")
             .event("mousedown", pv.Behavior.select())
-            .event("select", dojo.hitch( this, this.update) )
-            .event("selectend", dojo.hitch( this, this.selectAll))
-            .event("selectstart", dojo.hitch( this, this.mouseDown))
+            .event("select", lang.hitch( this, this.update) )
+            .event("selectend", lang.hitch( this, this.selectAll))
+            .event("selectstart", lang.hitch( this, this.mouseDown))
           .add(pv.Bar)
             .left(25)
             .top(function(d) { return d.y; } )
             .width(10)
             .height(function(d) { return d.dy; })
-            .fillStyle(dojo.hitch( this, function(t) {
+            .fillStyle(lang.hitch( this, function(t) {
                 return t.dim == this.active
                 ? this.c[t.dim]((this.filter[t.dim].max + this.filter[t.dim].min) / 2)
                 : "hsla(0,0,50%,.5)"; } ) )
             .strokeStyle("white")
             .cursor("move")
             .event("mousedown", pv.Behavior.drag())
-            .event("dragstart", dojo.hitch( this, this.update))
-            .event("drag", dojo.hitch( this, this.update));
+            .event("dragstart", lang.hitch( this, this.update))
+            .event("drag", lang.hitch( this, this.update));
 
         handle.anchor("bottom").add(pv.Label)
             .textBaseline("top")
             .font(this.labelFontStrSm)
             .textStyle(this.labelColor)
-            .text(dojo.hitch( this, function(d) { return this.filter[d.dim].min.toFixed(0) } ) );
+            .text(lang.hitch( this, function(d) { return this.filter[d.dim].min.toFixed(0) } ) );
 
         handle.anchor("top").add(pv.Label)
             .textBaseline("bottom")
             .font(this.labelFontStrSm)
             .textStyle(this.labelColor)
-            .text(dojo.hitch( this, function(d) { return this.filter[d.dim].max.toFixed(0) } ) );
+            .text(lang.hitch( this, function(d) { return this.filter[d.dim].max.toFixed(0) } ) );
 
             if( this.debug ) console.log('pentaho.viz.ParallelCoords.resize rendering');
             vis.render();

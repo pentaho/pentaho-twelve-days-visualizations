@@ -19,9 +19,10 @@ pen.define([
     '../util',
     '../VizController',
     'cdf/lib/CCC/protovis',
+    "dojo/_base/lang",
     'cdf/lib/CCC/protovis-msie',
     'cdf/lib/CCC/tipsy'
-], function(vizUtil, VizController, pv) {
+], function(vizUtil, VizController, pv, lang) {
 
   pentaho.viz.Calendar = function( div ) {
 
@@ -301,7 +302,7 @@ pen.define([
                   d.y = top;
                   return top;
               } )
-              .shapeSize(dojo.hitch( this, function(d) {
+              .shapeSize(lang.hitch( this, function(d) {
                   var size;
                   if( this.dayCol != -1 || this.dateCol != -1 ) {
                       if( !d.sizeValue ) {
@@ -321,8 +322,8 @@ pen.define([
                   return size;
               } ) )
               .shape("circle")
-              .fillStyle(dojo.hitch( this, this.getColor ))
-              .strokeStyle(dojo.hitch( this, function(d) {
+              .fillStyle(lang.hitch( this, this.getColor ))
+              .strokeStyle(lang.hitch( this, function(d) {
                   return d == this.mouseOverNode ? "#000000" : "#dddddd";
               } ) )
               .lineWidth(1)

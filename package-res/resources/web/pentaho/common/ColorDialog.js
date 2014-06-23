@@ -14,20 +14,15 @@
  *
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
-pen.define(function() {
+pen.define(["dojo/_base/declare", "dojo/on", "dojo/aspect", "dojo/_base/lang", "dijit/_Widget", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "pentaho/common/Dialog", "dijit/ColorPalette"], function(declare, on, aspect, lang, Widget, TemplatedMixin, _WidgetsInTemplateMixin, Dialog, ColorPalette) {
 
-    dojo.provide("pentaho.common.ColorDialog");
-    dojo.require("dijit._Widget");
-    dojo.require("dijit._Templated");
-    dojo.require('pentaho.common.Dialog');
-
-    dojo.declare("pentaho.common.ColorDialog", [
-        pentaho.common.Dialog,
-        dijit.ColorPalette
+    return declare("pentaho.common.ColorDialog", [
+        Dialog,
+        TemplatedMixin,
+        _WidgetsInTemplateMixin
     ],
     {
-        templateString: '<div dojoAttachPoint="dialogContainer" class="filterDialogContainer dialog-content pentaho-padding-sm" dojoAttachPoint="containerNode" style="width:230px; height:150px"><center><div dojoAttachPoint="colorDialogPalette" dojoType="dijit.ColorPalette">\n</div></center></div></div>',
-        widgetsInTemplate: true,
+        templateString: '<div dojoAttachPoint="dialogContainer" class="filterDialogContainer dialog-content pentaho-padding-sm" dojoAttachPoint="containerNode" style="width:230px; height:150px"><center><div dojoAttachPoint="colorDialogPalette" data-dojo-type="dijit/ColorPalette">\n</div></center></div></div>',
         buttons: ['Cancel_txt'],
         _onSuccessCallback: undefined,
         _onCancelCallback: undefined,
@@ -36,9 +31,9 @@ pen.define(function() {
         postCreate: function() {
             console.log('pentaho.common.ColorDialog.postCreate');
             this.inherited(arguments);
-            this.callbacks = [dojo.hitch(this, this.cancel)];
+            this.callbacks = [lang.hitch(this, this.cancel)];
             console.log('palette',this.colorDialogPalette);
-            dojo.connect(this.colorDialogPalette, "onChange", this, '_colorChange' );
+            on(this.colorDialogPalette, "change", lang.hitch(this, '_colorChange' ));
         },
 
         _colorChange: function(color) {
@@ -80,6 +75,4 @@ pen.define(function() {
             this._onCancelCallback = f;
         }
     });
-
-    return pentaho.common.ColorDialog;
 });
