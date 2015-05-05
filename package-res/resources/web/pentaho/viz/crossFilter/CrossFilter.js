@@ -14,7 +14,7 @@
  *
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
-pen.define([
+define([
     '../util',
     'd3',
     'crossfilter', "dojo/_base/lang"

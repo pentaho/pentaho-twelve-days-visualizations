@@ -25,10 +25,6 @@
     amd.paths [mid] = pluginPath;
     amd.config[mid + '/pentaho/viz/util'] = {pluginId: pluginId, pluginJsId: pluginJsId};
 
-    // Configure "VizController" - Don't know why. Doesn't work.
-    // See the dummy module at pentaho/viz/VizController.js
-    // amd.shim ['common-ui/vizapi/VizController'] = {init: function() { return pentaho.VizController; }};
-
     // Configure "d3"
     // The local mid should not to be used directly. Just require 'd3'.
     var localMid = mid + '/lib/d3';
@@ -66,11 +62,8 @@
 
 
     // Configure "jquery"
-    // Idem...
-    localMid = mid + '/lib/jquery';
-    amd.paths[localMid] = pluginPath + '/lib/jquery/jquery-shim';
-    // Redirect all "jquery" module requires to the local "jquery" version.
-    amd.map  [mid].jquery = localMid;
+    // Redirect all "jquery" module requires to cdf's "jquery"
+    amd.map[mid].jquery = "cdf/lib/jquery";
 
     // Configure amd-plugins (text and json)
     amd.paths['text'] = pluginPath + '/lib/amd-plugins/text';

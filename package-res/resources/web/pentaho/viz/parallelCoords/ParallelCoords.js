@@ -14,16 +14,14 @@
  *
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
-
-pen.define([
+define([
     '../util',
-    '../VizController',
     'cdf/lib/CCC/protovis',
     'jquery',
     'dojo/_base/lang',
     'cdf/lib/CCC/protovis-msie',
     'cdf/lib/CCC/tipsy'
-], function(vizUtil, VizController, pv, $, lang) {
+], function(vizUtil, pv, $, lang) {
 
     pentaho.viz.ParallelCoords = function( div ) {
 

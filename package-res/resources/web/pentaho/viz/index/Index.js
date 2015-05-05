@@ -14,7 +14,7 @@
  *
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
-pen.define([
+define([
     '../util',
     'cdf/lib/CCC/protovis',
     'cdf/lib/CCC/protovis-msie'

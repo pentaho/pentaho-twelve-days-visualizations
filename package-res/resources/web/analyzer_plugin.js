@@ -1,11 +1,11 @@
-pen.define([
+define([
     'require',
     'json!./analyzer_plugin.config.json', // vizualizations config object
     './pentaho/viz/util'
 ], function(require, vizs) {
 
-    var prefix = './pentaho/viz/';
-    var suffix = '/definition';
+    var prefix = './pentaho/viz/',
+        suffix = '/definition';
     return {
         // Require active vizs dynamically.
         load: function(name, req, callback) {

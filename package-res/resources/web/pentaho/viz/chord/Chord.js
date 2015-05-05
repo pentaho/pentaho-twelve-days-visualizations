@@ -14,7 +14,7 @@
  *
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
-pen.define([
+define([
     'require',
     '../util',
     'd3', "dojo/_base/lang"

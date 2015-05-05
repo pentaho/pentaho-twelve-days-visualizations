@@ -14,10 +14,9 @@
  *
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
-
-pen.define([
+define([
     '../util',
-    '../VizController',
+    'common-ui/vizapi/VizController',
     'cdf/lib/CCC/protovis',
     'dojo/_base/lang',
     'cdf/lib/CCC/protovis-msie',

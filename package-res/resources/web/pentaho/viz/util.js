@@ -14,10 +14,15 @@
  *
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
-pen.define([
+define([
     'require',
     'module',
-    './VizController', "dojo/_base/lang", "dojo/on", "dojo/_base/declare", "pentaho/common/Messages", "dojo/aspect"
+    'common-ui/vizapi/VizController', 
+    "dojo/_base/lang", 
+    "dojo/on", 
+    "dojo/_base/declare", 
+    "pentaho/common/Messages", 
+    "dojo/aspect"
 ], function(require, module, VizController, lang, on, declare, Messages, aspect) {
 
     var config = module.config() || {};

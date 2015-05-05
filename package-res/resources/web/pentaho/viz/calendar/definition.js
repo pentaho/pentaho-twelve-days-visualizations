@@ -14,12 +14,13 @@
  *
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
-pen.define([
+define([
     '../util',
     'pentaho/common/propertiesPanel/Panel',
     '../../common/propertiesPanel/ColorPicker',
-    '../../common/propertiesPanel/GradientPicker'
-], function(vizUtil, Panel, ColorPicker, GradientPicker) {
+    '../../common/propertiesPanel/GradientPicker',
+    "dojo/on"
+], function(vizUtil, Panel, ColorPicker, GradientPicker, on) {
 
     // TODO: Patch bug in 5.1 propertiesPanel/Panel
     Panel.onUIEvent = function (type, args) {

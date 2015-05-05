@@ -14,9 +14,30 @@
  *
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
-pen.define([
-    'common-ui/vizapi/VizController'
-], function() {
-    // Unfortunately couldn't configure this dependency through a shim and `init`. Didn't run.
-    return pentaho.VizController;
+define([
+    "dojo/_base/declare"
+], function(declare) {
+    
+    // StatefuUI copied from common-ui pentaho/common/propertiesPanel/Panel.js as it is no longer public there. 
+    // Remove once it is again public.
+    
+    return declare([], {
+            constructor: function(options) {
+                this.model = options.model;
+                this.propPanel = options.propPanel;
+            
+                var me = this;
+                this.model.watch(function(propName, prevVal, newVal) {
+                  switch(propName) {
+                    case "value":
+                    case "default":
+                      me.set(propName, newVal);
+                      break;
+                   }
+                });
+            },
+            
+            onUIEvent: function(type, args) {
+            }
+        });
 });
