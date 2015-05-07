@@ -15,28 +15,28 @@
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
 define([
-    "dojo/_base/declare", 
-    "dojo/on", 
-    "dojo/_base/lang", 
-    "dijit/_Widget", 
+    "dojo/_base/declare",
+    "dojo/on",
+    "dojo/_base/lang",
+    "dijit/_Widget",
     "dijit/_TemplatedMixin",
-    "dijit/_WidgetsInTemplateMixin", 
-    "pentaho/common/Dialog", 
-    "dijit/ColorPalette", 
-    "../ColorDialog", 
-    "dojo/dom-style", 
-    "./ColorBox", 
+    "dijit/_WidgetsInTemplateMixin",
+    "pentaho/common/Dialog",
+    "dijit/ColorPalette",
+    "../ColorDialog",
+    "dojo/dom-style",
+    "./ColorBox",
     "./StatefulUI",
     "pentaho/common/Messages",
     "pentaho/common/propertiesPanel/Panel",
     "pentaho/common/propertiesPanel/Configuration"
-], function(declare, on, lang, Widget, TemplatedMixin,WidgetsInTemplateMixin, Dialog, ColorPalette, 
+], function(declare, on, lang, Widget, TemplatedMixin,WidgetsInTemplateMixin, Dialog, ColorPalette,
             ColorDialog, style, ColorBox, StatefulUI, Messages, Panel, Configuration) {
-    
+
     /*global pentaho:true*/
-    
+
     var GradientPicker = declare(
-            "pentaho.common.propertiesPanel.GradientPicker", 
+            "pentaho.common.propertiesPanel.GradientPicker",
             [
                 Widget,
                 TemplatedMixin,
@@ -51,23 +51,23 @@ define([
                     threshold1: '',
                     threshold2: ''
                 },
-                
-                templateString: "<div><fieldset><legend class='pentaho-fieldset-pane-title'>${label}</legend>" + 
-                    "<table><tr><td><table><tr><td><div dojoAttachPoint='colorBox1' " + 
-                    "dojoType='pentaho.common.propertiesPanel.ColorBox'></div></td></tr><tr><td>" + 
-                    "<div dojoAttachPoint='colorBox2' dojoType='pentaho.common.propertiesPanel.ColorBox'></div></td></tr>" + 
-                    "<tr><td><div dojoAttachPoint='colorBox3' dojoType='pentaho.common.propertiesPanel.ColorBox'></div>" + 
-                    "</td></tr></table></td><td><table><tr><td>-&nbsp;<input type='text' dojoAttachPoint='threshold1Edit' " + 
-                    "class='input' style='width:75px; text-align:right'/></div></td></tr><tr><td>-&nbsp;" + 
-                    "<input type='text' dojoAttachPoint='threshold2Edit' id='' style='width:75px; text-align:right'/>" + 
+
+                templateString: "<div><fieldset><legend class='pentaho-fieldset-pane-title'>${label}</legend>" +
+                    "<table><tr><td><table><tr><td><div dojoAttachPoint='colorBox1' " +
+                    "dojoType='pentaho.common.propertiesPanel.ColorBox'></div></td></tr><tr><td>" +
+                    "<div dojoAttachPoint='colorBox2' dojoType='pentaho.common.propertiesPanel.ColorBox'></div></td></tr>" +
+                    "<tr><td><div dojoAttachPoint='colorBox3' dojoType='pentaho.common.propertiesPanel.ColorBox'></div>" +
+                    "</td></tr></table></td><td><table><tr><td>-&nbsp;<input type='text' dojoAttachPoint='threshold1Edit' " +
+                    "class='input' style='width:75px; text-align:right'/></div></td></tr><tr><td>-&nbsp;" +
+                    "<input type='text' dojoAttachPoint='threshold2Edit' id='' style='width:75px; text-align:right'/>" +
                     "</td></tr></table></td></tr></table></fieldset></div>",
-                
+
                 constructor: function(options) {
                     this.disabled = this.model.disabled;
                     this.label = Messages.getString(this.model.ui.label, this.model.ui.label);
                     this.inherited(arguments);
                 },
-        
+
                 postCreate: function() {
                     this.value = this.model.value;
                     this.threshold1Edit.value = this.value.threshold1;
@@ -84,7 +84,7 @@ define([
                     this.colorBox2.registerOkFunc(lang.hitch(this, "onChange"));
                     this.colorBox3.registerOkFunc(lang.hitch(this, "onChange"));
                 },
-        
+
                 onChange: function() {
                     // We have to force a new object.
                     this.value = {
@@ -96,7 +96,7 @@ define([
                     };
                     this.model.set('value', this.value);
                 },
-        
+
                 set: function(prop, newVal) {
                     if(this.colorBox1) {
                         if(prop == "value") {

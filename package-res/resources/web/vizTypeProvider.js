@@ -14,30 +14,8 @@
  *
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
-define([
-    "dojo/_base/declare"
-], function(declare) {
-
-    // StatefuUI copied from common-ui pentaho/common/propertiesPanel/Panel.js as it is no longer public there.
-    // Remove once it is again public.
-
-    return declare([], {
-            constructor: function(options) {
-                this.model = options.model;
-                this.propPanel = options.propPanel;
-
-                var me = this;
-                this.model.watch(function(propName, prevVal, newVal) {
-                  switch(propName) {
-                    case "value":
-                    case "default":
-                      me.set(propName, newVal);
-                      break;
-                   }
-                });
-            },
-
-            onUIEvent: function(type, args) {
-            }
-        });
+define(['./_activeVizTypes!'], function(vizTypes) {
+    return {
+        getAll: function() { return vizTypes; }
+    };
 });

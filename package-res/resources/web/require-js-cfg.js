@@ -1,5 +1,5 @@
 (function() {
-    // NOTE: must be in sync with the actual plugin folder name.
+    // NOTE: must be in sync with the actual pentaho plugin folder name!
     var pluginId = 'twelve-days-visualizations';
 
     // NOTE: `mid` must be in sync with that declared used in analyzer_plugin.
@@ -9,21 +9,27 @@
     // AMD module id
     var mid        = pluginJsId;
     var pluginPath = CONTEXT_PATH + 'content/' + pluginId + '/resources/web';
+    var configPath = CONTEXT_PATH + 'content/' + pluginId + '/resources/config';
 
     // ----------
 
     /*global requireCfg:true */
     var amd = requireCfg;
 
-    if(!amd.config) amd.config = {};
-    if(!amd.map)    amd.map    = {};
-    amd.map[mid] = {}; // For requires made from within this module
+    // Local map for requires made from within this module
+    amd.map[mid] = {};
 
     // ----------
 
     // Basic plugin configuration
     amd.paths [mid] = pluginPath;
-    amd.config[mid + '/pentaho/viz/util'] = {pluginId: pluginId, pluginJsId: pluginJsId};
+    amd.config[mid + '/pentaho/viz/vizTypeHelper'] = {pluginId: pluginId, pluginJsId: pluginJsId};
+
+    // Special mapping for vizTypes.config.json
+    amd.paths[mid + '/config'] = configPath;
+
+    // Register the IVizTypeProvider
+    amd.config.service[mid + "/vizTypeProvider"] = "IVizTypeProvider";
 
     // Configure "d3"
     // The local mid should not to be used directly. Just require 'd3'.
@@ -31,8 +37,7 @@
     amd.paths[localMid] = pluginPath + '/lib/d3/d3.v2.min';
     amd.shim [localMid] = {exports: 'd3'};
     // Redirect all "d3" module requires to the local d3 version.
-
-    amd.map  [mid].d3 = localMid;
+    amd.map[mid].d3 = localMid;
 
     // Configure "crossfilter"
     // The local mid should not to be used directly. Just require 'crossfilter'.
@@ -43,7 +48,7 @@
         deps:    ['d3']
     };
     // Redirect all "crossfilter" module requires to the local "crossfilter" version.
-    amd.map  [mid].crossfilter = localMid;
+    amd.map[mid].crossfilter = localMid;
 
     // Configure "moment"
     // Idem...
@@ -60,12 +65,16 @@
     // Redirect all "layoutCloud" module requires to the local "layoutCloud" version.
     amd.map  [mid].layoutCloud = localMid;
 
-
     // Configure "jquery"
     // Redirect all "jquery" module requires to cdf's "jquery"
-    amd.map[mid].jquery = "cdf/lib/jquery";
+    amd.map[mid]["jquery"] = "common-ui/jquery";
 
+    // Configure "protovis" - prefer common-ui's jQuery
+    var cccMap = amd.map["cdf/lib/CCC"] || (amd.map["cdf/lib/CCC"] = {});
+    cccMap["jquery"] = "common-ui/jquery";
+
+    // TODO: move these plugins to common-ui!
     // Configure amd-plugins (text and json)
-    amd.paths['text'] = pluginPath + '/lib/amd-plugins/text';
-    amd.paths['json'] = pluginPath + '/lib/amd-plugins/json';
+    amd.paths["text"] = pluginPath + '/lib/amd-plugins/text';
+    amd.paths["json"] = pluginPath + '/lib/amd-plugins/json';
 } ());

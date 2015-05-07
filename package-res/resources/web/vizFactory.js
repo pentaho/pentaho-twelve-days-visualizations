@@ -1,4 +1,4 @@
-/*
+/*!
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License, version 2.1 as published by the Free Software
  * Foundation.
@@ -15,29 +15,28 @@
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
 define([
-    "dojo/_base/declare"
-], function(declare) {
+    "es6-promise-shim",
+    "require"
+], function(Promise, require) {
 
-    // StatefuUI copied from common-ui pentaho/common/propertiesPanel/Panel.js as it is no longer public there.
-    // Remove once it is again public.
+    // Async Instance Factory
+    // Works by convention on `type`.
+    return function(type, arg) {
+        var vizLocalId = splitVizId(type);
+        if(!vizLocalId) throw new Error("Invalid Twelve Days Of Visualizations visualization type: '" + type + "'.");
 
-    return declare([], {
-            constructor: function(options) {
-                this.model = options.model;
-                this.propPanel = options.propPanel;
-
-                var me = this;
-                this.model.watch(function(propName, prevVal, newVal) {
-                  switch(propName) {
-                    case "value":
-                    case "default":
-                      me.set(propName, newVal);
-                      break;
-                   }
-                });
-            },
-
-            onUIEvent: function(type, args) {
-            }
+        // @type Promise<IViz>
+        return new Promise(function(resolve, reject) {
+            require(["./pentaho/viz/" + vizLocalId + "/Viz"], function(VizClass) {
+                var viz = new VizClass(arg);
+                resolve(viz);
+            });
         });
+    };
+
+    // eg: "twelveDaysViz/sunBurst""
+    function splitVizId(vizType) {
+        var parts = (vizType || "").split("/");
+        if(parts.length === 2) return parts[1];
+    }
 });

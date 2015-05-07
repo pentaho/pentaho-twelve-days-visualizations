@@ -1,4 +1,4 @@
-/*
+/*!
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License, version 2.1 as published by the Free Software
  * Foundation.
@@ -15,29 +15,24 @@
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
 define([
-    "dojo/_base/declare"
-], function(declare) {
+    "require",
+    "json!./config/vizTypes.json" // active vizualizations config object
+], function(require, vizs) {
+    var prefix  = './pentaho/viz/',
+        suffix  = '/vizType',
+        A_slice = Array.prototype.slice;
+    return {
+        // Require active vizs dynamically.
+        load: function(name, req, callback) {
+            // name is ignored
+            var vizMids = [];
+            for(var vizLocalId in vizs)
+                if(vizs[vizLocalId])
+                    vizMids.push(prefix + vizLocalId + suffix);
 
-    // StatefuUI copied from common-ui pentaho/common/propertiesPanel/Panel.js as it is no longer public there.
-    // Remove once it is again public.
-
-    return declare([], {
-            constructor: function(options) {
-                this.model = options.model;
-                this.propPanel = options.propPanel;
-
-                var me = this;
-                this.model.watch(function(propName, prevVal, newVal) {
-                  switch(propName) {
-                    case "value":
-                    case "default":
-                      me.set(propName, newVal);
-                      break;
-                   }
-                });
-            },
-
-            onUIEvent: function(type, args) {
-            }
-        });
+            require(vizMids, function() {
+                callback(A_slice.call(arguments));
+            });
+        }
+    };
 });

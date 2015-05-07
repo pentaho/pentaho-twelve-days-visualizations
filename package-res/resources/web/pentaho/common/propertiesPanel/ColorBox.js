@@ -15,21 +15,21 @@
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
 define([
-    "dojo/_base/declare", 
-    "dojo/on", 
-    "dojo/_base/lang", 
-    "dijit/_Widget", 
-    "dijit/_TemplatedMixin", 
-    "dijit/_WidgetsInTemplateMixin", 
-    "pentaho/common/Dialog", 
-    "dijit/ColorPalette", 
-    "../ColorDialog", 
+    "dojo/_base/declare",
+    "dojo/on",
+    "dojo/_base/lang",
+    "dijit/_Widget",
+    "dijit/_TemplatedMixin",
+    "dijit/_WidgetsInTemplateMixin",
+    "pentaho/common/Dialog",
+    "dijit/ColorPalette",
+    "../ColorDialog",
     "dojo/dom-style"
-], function(declare, on, lang, Widget, TemplatedMixin, _WidgetsInTemplateMixin, Dialog, 
+], function(declare, on, lang, Widget, TemplatedMixin, _WidgetsInTemplateMixin, Dialog,
             ColorPalette, ColorDialog, style) {
-    
+
     return declare(
-        "pentaho.common.propertiesPanel.ColorBox", 
+        "pentaho.common.propertiesPanel.ColorBox",
         [
             Widget,
             TemplatedMixin,
@@ -38,30 +38,30 @@ define([
         {
             value: "none",
             okFunc: null,
-            templateString: "<div style='width:20px; height: 20px; background-color: none; cursor: pointer; " + 
+            templateString: "<div style='width:20px; height: 20px; background-color: none; cursor: pointer; " +
                 "border: 1px solid #808080;' dojoAttachPoint='colorBox'>&nbsp;</div>",
-            
+
             constructor: function(options) {
                 this.inherited(arguments);
             },
-    
+
             postCreate: function() {
                 style.set(this.colorBox,"background-color",this.value);
                 on(this.colorBox, "click", lang.hitch(this, "onClick"));
             },
-    
+
             onClick: function() {
                 if(!ColorDialog.dialog) ColorDialog.dialog = new ColorDialog();
-                
+
                 var func = lang.hitch(this, function() { this.colorsChanged(); });
                 ColorDialog.dialog.registerOnSuccessCallback(func);
                 ColorDialog.dialog.show();
             },
-    
+
             registerOkFunc: function(func) {
                 this.okFunc = func;
             },
-    
+
             colorsChanged: function() {
                 var color = ColorDialog.dialog.color;
                 if(color != null && color != this.value) {
@@ -70,7 +70,7 @@ define([
                     if(this.okFunc) this.okFunc(color);
                 }
             },
-    
+
             set: function(prop, newVal) {
                 if(this.colorBox) {
                     if(prop == "value" && newVal != this.value) {

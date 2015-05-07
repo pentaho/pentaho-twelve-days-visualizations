@@ -15,28 +15,28 @@
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
 define([
-    "dojo/_base/declare", 
-    "dojo/on", 
-    "dojo/_base/lang", 
-    "dijit/_Widget", 
+    "dojo/_base/declare",
+    "dojo/on",
+    "dojo/_base/lang",
+    "dijit/_Widget",
     "dijit/_TemplatedMixin",
-    "dijit/_WidgetsInTemplateMixin", 
-    "pentaho/common/Dialog", 
-    "dijit/ColorPalette", 
-    "../ColorDialog", 
-    "dojo/dom-style", 
-    "./ColorBox", 
-    "./StatefulUI", 
+    "dijit/_WidgetsInTemplateMixin",
+    "pentaho/common/Dialog",
+    "dijit/ColorPalette",
+    "../ColorDialog",
+    "dojo/dom-style",
+    "./ColorBox",
+    "./StatefulUI",
     "pentaho/common/Messages",
     "pentaho/common/propertiesPanel/Panel",
     "pentaho/common/propertiesPanel/Configuration"
-], function(declare, on, lang, Widget, TemplatedMixin, _WidgetsInTemplateMixin, Dialog, 
+], function(declare, on, lang, Widget, TemplatedMixin, _WidgetsInTemplateMixin, Dialog,
             ColorPalette, ColorDialog, style, ColorBox, StatefulUI, Messages, Panel, Configuration) {
-    
+
     /*global pentaho:true*/
-    
+
     var ColorPicker = declare(
-            "pentaho.common.propertiesPanel.ColorPicker", 
+            "pentaho.common.propertiesPanel.ColorPicker",
             [
                 Widget,
                 TemplatedMixin,
@@ -45,22 +45,22 @@ define([
             ],
             {
                 value: "none",
-                templateString: "<div><table><tr><td><div dojoAttachPoint='colorBox' " + 
-                    "dojoType='pentaho.common.propertiesPanel.ColorBox'></div></td><td style='padding-left: 5px'>" + 
+                templateString: "<div><table><tr><td><div dojoAttachPoint='colorBox' " +
+                    "dojoType='pentaho.common.propertiesPanel.ColorBox'></div></td><td style='padding-left: 5px'>" +
                     "<label for='${model.id}_colorbox'>${label}</label></rd></tr></table></div>",
-        
+
                 constructor: function(options) {
                     this.disabled = this.model.disabled;
                     this.label = Messages.getString(this.model.ui.label, this.model.ui.label);
                     this.inherited(arguments);
                 },
-        
+
                 postCreate: function() {
                     this.value = this.model.value;
                     style.set(this.colorBox.domNode,"background-color",this.value);
                     this.colorBox.registerOkFunc(lang.hitch(this, "onClick"));
                 },
-        
+
                 onClick: function(color) {
                     if(color != null && color != this.value) {
                         this.value = color;
@@ -68,7 +68,7 @@ define([
                         this.model.set("value", this.value);
                     }
                 },
-        
+
                 set: function(prop, newVal) {
                     if(this.colorBox) {
                         if(prop == "value" && newVal != this.value) {
