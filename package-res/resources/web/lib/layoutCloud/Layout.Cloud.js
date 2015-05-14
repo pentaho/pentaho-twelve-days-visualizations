@@ -19,12 +19,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-
-pen.define([
-    'cdf/lib/CCC/protovis',
-    'cdf/lib/CCC/protovis-msie'
-], function(pv) {
-
+define(["cdf/lib/CCC/protovis"], function(pv) {
     /**
      * @class Abstract class for "cloud" visualizations - roughly circular clouds of
      * non-overlapping nodes.
@@ -32,9 +27,10 @@ pen.define([
      */
     pv.Layout.Cloud = function() {
         pv.Layout.call(this);
+        
         var that = this,
             notImplemented = function() {
-                throw new Exception("Not implemented")
+                throw new Error("Not implemented");
             };
 
         // the node prototype

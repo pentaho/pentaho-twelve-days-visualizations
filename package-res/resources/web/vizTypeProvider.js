@@ -1,4 +1,4 @@
-/*!
+/*
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License, version 2.1 as published by the Free Software
  * Foundation.
@@ -14,8 +14,8 @@
  *
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
-
-/*global analyzerVizPlugins:true*/
-
-// This script informs Analyzer that it should request this module through RequireJS.
-analyzerVizPlugins.push("twelveDaysViz/analyzer_plugin");
+define(['./_activeVizTypes!'], function(vizTypes) {
+    return {
+        getAll: function() { return vizTypes; }
+    };
+});

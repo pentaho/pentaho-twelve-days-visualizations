@@ -14,8 +14,25 @@
  *
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
+define([
+    "require",
+    "json!./config/vizTypes.json" // active vizualizations config object
+], function(require, vizs) {
+    var prefix  = './pentaho/viz/',
+        suffix  = '/vizType',
+        A_slice = Array.prototype.slice;
+    return {
+        // Require active vizs dynamically.
+        load: function(name, req, callback) {
+            // name is ignored
+            var vizMids = [];
+            for(var vizLocalId in vizs)
+                if(vizs[vizLocalId])
+                    vizMids.push(prefix + vizLocalId + suffix);
 
-/*global analyzerVizPlugins:true*/
-
-// This script informs Analyzer that it should request this module through RequireJS.
-analyzerVizPlugins.push("twelveDaysViz/analyzer_plugin");
+            require(vizMids, function() {
+                callback(A_slice.call(arguments));
+            });
+        }
+    };
+});

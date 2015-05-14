@@ -1,4 +1,4 @@
-/*!
+/*
  * This program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License, version 2.1 as published by the Free Software
  * Foundation.
@@ -14,8 +14,30 @@
  *
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
+define([
+    "dojo/_base/declare"
+], function(declare) {
 
-/*global analyzerVizPlugins:true*/
+    // StatefuUI copied from common-ui pentaho/common/propertiesPanel/Panel.js as it is no longer public there.
+    // Remove once it is again public.
 
-// This script informs Analyzer that it should request this module through RequireJS.
-analyzerVizPlugins.push("twelveDaysViz/analyzer_plugin");
+    return declare([], {
+            constructor: function(options) {
+                this.model = options.model;
+                this.propPanel = options.propPanel;
+
+                var me = this;
+                this.model.watch(function(propName, prevVal, newVal) {
+                  switch(propName) {
+                    case "value":
+                    case "default":
+                      me.set(propName, newVal);
+                      break;
+                   }
+                });
+            },
+
+            onUIEvent: function(type, args) {
+            }
+        });
+});

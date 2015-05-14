@@ -1,0 +1,14 @@
+{
+    "calendar": 1,
+    "chord": 1,
+    "crossFilter": 1,
+    "funnel": 1,
+    "index": 1,
+    "packedCircle": 1,
+    "parallelCoords": 1,
+    "sunBurst": 0,
+    "tagCloud": 1,
+    "treeMap": 1,
+    "trellis": 1,
+    "zoom": 1
+}

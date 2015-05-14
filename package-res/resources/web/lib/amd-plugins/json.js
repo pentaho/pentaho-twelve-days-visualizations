@@ -4,10 +4,8 @@
  * Author: Miller Medeiros
  * Version: 0.3.2 (2013/08/17)
  * Released under the MIT license
- *
- * Pentaho changes: changed `define` to `pen.define`.
  */
-pen.define(['text'], function(text){
+define(['text'], function(text){
 
     var CACHE_BUST_QUERY_PARAM = 'bust',
         CACHE_BUST_FLAG = '!bust',
@@ -59,7 +57,7 @@ pen.define(['text'], function(text){
         write : function(pluginName, moduleName, write){
             if(moduleName in buildMap){
                 var content = buildMap[moduleName];
-                write('pen.define("'+ pluginName +'!'+ moduleName +'", function(){ return '+ content +';});\n');
+                write('define("'+ pluginName +'!'+ moduleName +'", function(){ return '+ content +';});\n');
             }
         }
 
