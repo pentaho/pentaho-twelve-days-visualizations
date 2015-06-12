@@ -1,4 +1,6 @@
 (function() {
+    /*global CONTEXT_PATH:true, requireCfg:true */
+
     // NOTE: must be in sync with the actual pentaho plugin folder name!
     var pluginId = 'twelve-days-visualizations';
 
@@ -13,7 +15,6 @@
 
     // ----------
 
-    /*global requireCfg:true */
     var amd = requireCfg;
 
     // Local map for requires made from within this module
@@ -23,13 +24,14 @@
 
     // Basic plugin configuration
     amd.paths [mid] = pluginPath;
-    amd.config[mid + '/pentaho/viz/vizTypeHelper'] = {pluginId: pluginId, pluginJsId: pluginJsId};
+    amd.config[mid + '/pentaho/visual/visualTypeHelper'] = {pluginId: pluginId, pluginJsId: pluginJsId};
 
     // Special mapping for vizTypes.config.json
     amd.paths[mid + '/config'] = configPath;
 
-    // Register the IVizTypeProvider
-    amd.config.service[mid + "/vizTypeProvider"] = "IVizTypeProvider";
+    // Register the IVisualTypeProvider and Visual API config
+    amd.config.service[mid + "/visualTypeProvider"] = "IVisualTypeProvider";
+    amd.config.service[mid + "/visualApiConfig"] = "IVisualApiConfiguration";
 
     // Configure "d3"
     // The local mid should not to be used directly. Just require 'd3'.
@@ -72,9 +74,4 @@
     // Configure "protovis" - prefer common-ui's jQuery
     var cccMap = amd.map["cdf/lib/CCC"] || (amd.map["cdf/lib/CCC"] = {});
     cccMap["jquery"] = "common-ui/jquery";
-
-    // TODO: move these plugins to common-ui!
-    // Configure amd-plugins (text and json)
-    amd.paths["text"] = pluginPath + '/lib/amd-plugins/text';
-    amd.paths["json"] = pluginPath + '/lib/amd-plugins/json';
 } ());
