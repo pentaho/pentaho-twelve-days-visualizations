@@ -2,15 +2,13 @@
  * @license RequireJS text 2.0.10 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
  * see: http://github.com/requirejs/text for details
- *
- * Pentaho changes: changed `define` and `require` to `pen.define` and `pen.require`.
  */
 /*jslint regexp: true */
 /*global pen, XMLHttpRequest, ActiveXObject,
   window, process, Packages,
   java, location, Components, FileUtils */
 
-pen.define(['module'], function (module) {
+define(['module'], function (module) {
     'use strict';
 
     var text, fs, Cc, Ci, xpcIsWindows,
@@ -209,7 +207,7 @@ pen.define(['module'], function (module) {
             if (buildMap.hasOwnProperty(moduleName)) {
                 var content = text.jsEscape(buildMap[moduleName]);
                 write.asModule(pluginName + "!" + moduleName,
-                               "pen.define(function () { return '" +
+                               "define(function () { return '" +
                                    content +
                                "';});\n");
             }

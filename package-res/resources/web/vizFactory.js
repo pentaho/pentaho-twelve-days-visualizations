@@ -14,8 +14,29 @@
  *
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
+define([
+    "es6-promise-shim",
+    "require"
+], function(Promise, require) {
 
-/*global analyzerVizPlugins:true*/
+    // Async Instance Factory
+    // Works by convention on `type`.
+    return function(type, arg) {
+        var vizLocalId = splitVizId(type);
+        if(!vizLocalId) throw new Error("Invalid Twelve Days Of Visualizations visualization type: '" + type + "'.");
 
-// This script informs Analyzer that it should request this module through RequireJS.
-analyzerVizPlugins.push("twelveDaysViz/analyzer_plugin");
+        // @type Promise<IViz>
+        return new Promise(function(resolve, reject) {
+            require(["./pentaho/viz/" + vizLocalId + "/Viz"], function(VizClass) {
+                var viz = new VizClass(arg);
+                resolve(viz);
+            });
+        });
+    };
+
+    // eg: "twelveDaysViz/sunBurst""
+    function splitVizId(vizType) {
+        var parts = (vizType || "").split("/");
+        if(parts.length === 2) return parts[1];
+    }
+});
