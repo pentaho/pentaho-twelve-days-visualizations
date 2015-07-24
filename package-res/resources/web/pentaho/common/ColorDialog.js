@@ -14,17 +14,7 @@
  *
  * Copyright (c) 2012 Pentaho Corporation..  All rights reserved.
  */
-define([
-    "dojo/_base/declare",
-    "dojo/on",
-    "dojo/aspect",
-    "dojo/_base/lang",
-    "dijit/_Widget",
-    "dijit/_TemplatedMixin",
-    "dijit/_WidgetsInTemplateMixin",
-    "pentaho/common/Dialog",
-    "dijit/ColorPalette"
-], function(declare, on, aspect, lang, Widget, TemplatedMixin, _WidgetsInTemplateMixin, Dialog, ColorPalette) {
+pen.define(["dojo/_base/declare", "dojo/on", "dojo/aspect", "dojo/_base/lang", "dijit/_Widget", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "pentaho/common/Dialog", "dijit/ColorPalette"], function(declare, on, aspect, lang, Widget, TemplatedMixin, _WidgetsInTemplateMixin, Dialog, ColorPalette) {
 
     return declare("pentaho.common.ColorDialog", [
         Dialog,
