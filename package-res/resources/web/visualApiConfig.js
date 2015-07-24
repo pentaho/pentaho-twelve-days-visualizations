@@ -22,13 +22,13 @@ define(function() {
 
       // Disable sunburst in Analyzer, by default, as it has been superseded by "ccc-sunburst".
       {
-        id:        "twelveDaysViz/sunBurst",
+        id:        "x-twelveDaysViz/sunBurst",
         container: "analyzer",
         enabled:   false
       },
 
       {
-        id:        /^twelveDaysViz\//,
+        id:        /^x-twelveDaysViz\//,
         container: "analyzer",
 
         getEditorProperties: function(editorDoc, filterPropsList, filterPropsMap) {

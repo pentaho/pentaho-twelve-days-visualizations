@@ -55,6 +55,7 @@ define([
         drawSpec  the drawSpec for the visualization
     */
     TagCloud.prototype.draw = function(dataTable, drawSpec) {
+        var me = this;
 
         this.dataTable = dataTable;
         this.drawSpec  = drawSpec;
@@ -172,7 +173,7 @@ define([
           fade:    false,
           followMouse: true,
           corners: true,
-          arrow:   false,
+          arrowVisible: false,
           opacity: 1
         };
 
@@ -194,7 +195,7 @@ define([
 
         if(this.debug) console.log('TagCloud.draw creating text');
         var tagCloud = vis3.add(LayoutCloud.Text)
-            .nodes(this.data)
+            .nodes(function() { return me.data.slice(); })
             .textStyle(lang.hitch(this, function(d) {
                 return (this.colorText && this.colorCol != -1) ? this.getColor(d) : this.labelColor;
             }))
@@ -210,30 +211,32 @@ define([
 
         if(this.debug) console.log('TagCloud.draw creating bars');
         if(!this.colorText) {
-            tagCloud.node.add(pv.Bar)
+            this.pvBgColorBar = tagCloud.node.add(pv.Bar)
                 .fillStyle(lang.hitch(this, function(d) {
                     return this.colorText ? "none" : this.getColor(d)
                 }))
                 .strokeStyle(function(d) {
-                    if(d == this.parent.parent.parent.viz.mouseOverTag) {
-                        return "#000000";
-                    } else {
-                        return this.parent.parent.parent.viz.getColor(d);
-                    }
+                    if(d == me.mouseOverTag) return "#000000";
+                    return me.getColor(d);
                 })
                 .lineWidth(2);
         }
+
         tagCloud.label.add(pv.Label);
 
-        tagCloud.node.add(pv.Bar)
+        var pvTagNodeBar = tagCloud.node.add(pv.Bar)
             .fillStyle("rgba(255,255,255,0.1)")
             .title(function(){ return "";}) // Prevent browser tooltip
             .text(function(d){ return d && d.meta ? d.meta.tooltip : ""; })
             .events("all")
-            .event('click', lang.hitch(this, function(d) { this.mouseClick(d); }))
-            .event('mouseover', lang.hitch(this, function(d) { this.mouseMove(d); }))
-            .event('mouseout', lang.hitch(this, function(d) { this.mouseOut(d); }))
-            .event('mousemove', pv.Behavior.tipsy(tipOptions));
+            .event('mousemove', pv.Behavior.tipsy(tipOptions))
+            .event('click', lang.hitch(this, function(d) { this.mouseClick(d); }));
+
+        if( !this.colorText ) {
+            pvTagNodeBar
+                .event('mouseover', lang.hitch(this, function(d) { this.mouseMove(d); }))
+                .event('mouseout', lang.hitch(this, function(d) { this.mouseOut(d); }));
+        }
 
         if(this.debug) console.log('TagCloud.draw rendering');
         vis.render();
@@ -243,13 +246,13 @@ define([
     TagCloud.prototype.mouseMove = function(d, t) {
         if(this.debug) console.log("TagCloud mouseMove()", d);
         this.mouseOverTag = d;
-        this.rootPanel.render();
+        this.pvBgColorBar.render();
     };
 
     TagCloud.prototype.mouseOut = function(d, t) {
         if(this.debug) console.log("TagCloud mouseOut()", d);
         this.mouseOverTag = null;
-        this.rootPanel.render();
+        this.pvBgColorBar.render();
     };
 
     TagCloud.prototype.mouseClick = function(source) {
