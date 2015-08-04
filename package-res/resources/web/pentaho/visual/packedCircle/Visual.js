@@ -196,7 +196,7 @@ define([
               fade:    false,
               followMouse: true,
               corners: true,
-              arrow:   false,
+              arrowVisible: false,
               opacity: 1
             };
 

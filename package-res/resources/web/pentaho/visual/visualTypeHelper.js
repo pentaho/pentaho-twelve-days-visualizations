@@ -45,7 +45,7 @@ define([
 
             visualType.id = typeId;
             visualType.localTypeId = localTypeId;
-            visualType.name = Messages.getString(typeName);
+            visualType.name = 'X - ' + Messages.getString(typeName);
             visualType.factory = visualFactory;
             if(!visualType.type) visualType.type = defaultCategory;
 
@@ -132,7 +132,7 @@ define([
     }
 
     function buildVisualTypeId(localTypeId) {
-        return localTypeId ? (pluginJsId + '/' + localTypeId) : pluginJsId;
+        return localTypeId ? ('x-' + pluginJsId + '/' + localTypeId) : pluginJsId;
     }
 
     function registerMsgBundle(bundleId, relativePath) {
