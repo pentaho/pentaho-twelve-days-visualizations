@@ -22,7 +22,6 @@ pen.define([
     'cdf/lib/CCC/protovis',
     'layoutCloud',
     'dojo/_base/lang',
-    'cdf/lib/CCC/protovis-msie',
     'cdf/lib/CCC/tipsy'
 ], function(vizUtil, VizController, pv, LayoutCloud, lang) {
 

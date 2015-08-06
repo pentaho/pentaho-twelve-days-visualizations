@@ -17,8 +17,7 @@
 pen.define([
     '../util',
     'moment',
-    'cdf/lib/CCC/protovis',
-    'cdf/lib/CCC/protovis-msie'
+    'cdf/lib/CCC/protovis'
 ], function(vizUtil, moment, pv) {
 
     /*

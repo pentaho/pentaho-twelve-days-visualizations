@@ -20,7 +20,6 @@ pen.define([
     'cdf/lib/CCC/protovis',
     'jquery',
     'dojo/_base/lang',
-    'cdf/lib/CCC/protovis-msie',
     'cdf/lib/CCC/tipsy'
 ], function(vizUtil, pv, $, lang) {
 
