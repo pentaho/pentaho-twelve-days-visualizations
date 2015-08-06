@@ -16,8 +16,7 @@
  */
 pen.define([
     '../util',
-    'cdf/lib/CCC/protovis',
-    'cdf/lib/CCC/protovis-msie'
+    'cdf/lib/CCC/protovis'
 ], function(vizUtil, pv) {
 
     pentaho.viz.Index = function( div ) {

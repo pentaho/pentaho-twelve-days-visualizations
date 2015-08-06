@@ -20,7 +20,6 @@ pen.define([
     '../VizController',
     'cdf/lib/CCC/protovis',
     'dojo/_base/lang',
-    'cdf/lib/CCC/protovis-msie',
     'cdf/lib/CCC/tipsy'
 ], function(vizUtil, VizController, pv) {
 

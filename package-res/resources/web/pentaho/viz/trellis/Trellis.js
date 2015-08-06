@@ -18,8 +18,7 @@
 pen.define([
     '../util',
     'cdf/lib/CCC/protovis',
-    'dojo/_base/lang',
-    'cdf/lib/CCC/protovis-msie'
+    'dojo/_base/lang'
 ], function(vizUtil, pv, lang) {
 
     pentaho.viz.Trellis = function( div ) {
