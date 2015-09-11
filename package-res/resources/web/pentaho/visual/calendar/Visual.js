@@ -502,43 +502,22 @@ define([
             this.monthMap[Messages.getString('dec2')] = 12;
         };
 
+        this.getRoleFirstColumnIndex = function(name) {
+            return this.drawSpec[name] ? this.dataTable.getColumnIndexByAttribute(this.drawSpec[name][0]) : -1;
+        };
+
         this.processData = function() {
 
             if(this.debug) console.log('Calendar.processData()');
 
-            this.colorByCol = -1;
-            this.sizeByCol = -1;
-            this.dateCol = -1;
-            this.yearCol = -1;
-            this.monthCol = -1;
-            this.dayCol = -1;
+            this.colorByCol = this.getRoleFirstColumnIndex("colorby");
+            this.sizeByCol  = this.getRoleFirstColumnIndex("sizeby");
+            this.dateCol = this.getRoleFirstColumnIndex("date");
+            this.yearCol = this.getRoleFirstColumnIndex("year");
+            this.monthCol = this.getRoleFirstColumnIndex("month");
+            this.dayCol = this.getRoleFirstColumnIndex("day");
             this.data = [];
 
-            for(var colNo=0; colNo<this.dataTable.getNumberOfColumns(); colNo++) {
-                var dataReq = this.dataTable.getColumnProperty(colNo,'dataReq');
-                if(dataReq) {
-                    for (var idx=0; idx < dataReq.length; idx++) {
-                        if(dataReq[idx].id == 'colorby') {
-                            this.colorByCol = colNo;
-                        }
-                        else if(dataReq[idx].id == 'sizeby') {
-                            this.sizeByCol = colNo;
-                        }
-                        else if(dataReq[idx].id == 'date') {
-                            this.dateCol = colNo;
-                        }
-                        else if(dataReq[idx].id == 'year') {
-                            this.yearCol = colNo;
-                        }
-                        else if(dataReq[idx].id == 'month') {
-                            this.monthCol = colNo;
-                        }
-                        else if(dataReq[idx].id == 'day') {
-                            this.dayCol = colNo;
-                        }
-                    }
-                }
-            }
             this.colorMinValue = null;
             this.colorMaxValue = null;
             this.sizeMinValue = null;
@@ -546,6 +525,7 @@ define([
             this.totalValue = 0;
             this.minYear = null;
             var yearSet = {};
+            var year;
 
             for(var rowNo=0; rowNo<this.dataTable.getNumberOfRows(); rowNo++) {
                 var colorValue = 1;
@@ -556,7 +536,7 @@ define([
                 if(this.colorByCol != -1) colorValue = this.dataTable.getValue(rowNo, this.colorByCol);
                 if(this.sizeByCol  != -1) sizeValue  = this.dataTable.getValue(rowNo, this.sizeByCol );
 
-                var year, month, day, date;
+                var month, day, date;
                 if(this.yearCol != -1)
                   year = parseInt(this.dataTable.getFormattedValue(rowNo, this.yearCol), 10);
 
@@ -587,18 +567,24 @@ define([
                 var yearStart = new Date(year,0,1);
                 var dayOfWeek = yearStart.getDay();
 
-                var dateStr = ""+dateObj;
+                var dateStr = "" + dateObj;
                 if(dateStr.indexOf("00:00:00") != -1) {
                     // trim off the useless time part
                     dateStr = dateStr.substr(0, dateStr.indexOf("00:00:00")-1);
                 }
                 tooltip += dateStr;
+
                 if(this.colorByCol != -1) {
-                    tooltip += "<br/>" + this.dataTable.getColumnLabel(this.colorByCol) + " " + this.colorByTooltipHint + ": "+
+                    tooltip += "<br/>" +
+                        this.dataTable.getColumnLabel(this.colorByCol) + " " +
+                        this.colorByTooltipHint + ": "+
                         this.dataTable.getFormattedValue(rowNo, this.colorByCol);
                 }
+
                 if(this.sizeByCol != -1) {
-                    tooltip += "<br/>" + this.dataTable.getColumnLabel(this.sizeByCol) + " " + this.sizeByTooltipHint + ": "+
+                    tooltip += "<br/>" +
+                        this.dataTable.getColumnLabel(this.sizeByCol) + " " +
+                        this.sizeByTooltipHint + ": "+
                         this.dataTable.getFormattedValue(rowNo, this.sizeByCol);
                 }
 
@@ -636,15 +622,16 @@ define([
                     this.sizeMaxValue = Math.max(obj.sizeValue, this.sizeMaxValue);
                     this.minYear =  Math.min(obj.year, this.minYear);
                 }
-
             }
 
-            if(this.gradient && this.gradient.threshold1 && ''+parseFloat(this.gradient.threshold1) != "NaN") {
-                this.colorMinValue = parseFloat(this.gradient.threshold1);
-            }
+            if(this.gradient) {
+                if (this.gradient.threshold1 != null && !isNaN(parseFloat(this.gradient.threshold1))) {
+                    this.colorMinValue = parseFloat(this.gradient.threshold1);
+                }
 
-            if(this.gradient && this.gradient.threshold2 && ''+parseFloat(this.gradient.threshold2) != "NaN") {
-                this.colorMaxValue = parseFloat(this.gradient.threshold2);
+                if (this.gradient.threshold2 != null && !isNaN(parseFloat(this.gradient.threshold2))) {
+                    this.colorMaxValue = parseFloat(this.gradient.threshold2);
+                }
             }
 
             this.years = [];

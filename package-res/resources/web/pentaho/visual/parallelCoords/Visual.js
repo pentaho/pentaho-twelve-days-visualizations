@@ -302,37 +302,32 @@ define([
             this.tableDiv.appendChild(this.centerNode);
         };
 
+        this.getRoleColumnIndexes = function(roleName) {
+            var attrNames = this.drawSpec[roleName];
+            return attrNames
+                ? attrNames.map(this.dataTable.getColumnIndexByAttribute, this.dataTable)
+                : [];
+        };
+
         this.processData = function() {
             if(this.debug) console.log('ParallelCoords.processData()');
 
-            this.rowsCols = [];
-            this.measuresCols = [];
+            this.rowsCols = this.getRoleColumnIndexes("cols");
+            this.measuresCols = this.getRoleColumnIndexes("measures");
 
             this.measures = {};
-
-            for(var colNo=0; colNo<this.dataTable.getNumberOfColumns(); colNo++) {
-                var dataReq = this.dataTable.getColumnProperty(colNo,'dataReq');
-                if(dataReq) {
-                    for (var idx=0; idx < dataReq.length; idx++) {
-                        if(dataReq[idx].id == 'cols') {
-                            this.rowsCols.push(colNo);
-                        }
-                        else if(dataReq[idx].id == 'measures') {
-                            this.measuresCols.push(colNo);
-                            var id = this.dataTable.getColumnId(colNo);
-                            var name = this.dataTable.getColumnLabel(colNo);
-                            this.measures[id] = {
-                                name: name,
-                                unit: ""
-                            };
-                        }
-                    }
-                }
-            }
+            this.measuresCols.forEach(function(index) {
+                var id = this.dataTable.getColumnId(index),
+                    name = this.dataTable.getColumnLabel(index);
+                this.measures[id] = {
+                    name: name,
+                    unit: ""
+                };
+            }, this);
 
             this.dataObj = [];
             // create the data object
-            for(var rowNo=0; rowNo<this.dataTable.getNumberOfRows(); rowNo++) {
+            for(var rowNo = 0; rowNo < this.dataTable.getNumberOfRows(); rowNo++) {
                 var name = '';
                 var tooltip = '';
                 for(var idx=0; idx<this.rowsCols.length; idx++) {
@@ -344,7 +339,7 @@ define([
                 }
 
                 var obj = {
-                    name:   name,
+                    name: name,
                     rowIdx: rowNo
                 };
 

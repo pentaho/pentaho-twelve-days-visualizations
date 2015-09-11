@@ -295,24 +295,18 @@ define([
             this.svgDiv.style.textAlign="center";
         };
 
+        this.getRoleColumnIndexes = function(roleName) {
+            var attrNames = this.drawSpec[roleName];
+            return attrNames
+                ? attrNames.map(this.dataTable.getColumnIndexByAttribute, this.dataTable)
+                : [];
+        };
+
         this.processData = function() {
 
-            this.measuresCols = [];
-            this.rowsCols = [];
+            this.measuresCols = this.getRoleColumnIndexes("measures");
+            this.rowsCols = this.getRoleColumnIndexes("cols");
             this.data = [];
-
-            for(var colNo=0; colNo<this.dataTable.getNumberOfColumns(); colNo++) {
-                var dataReq = this.dataTable.getColumnProperty(colNo,'dataReq');
-                if(dataReq) {
-                    for (var idx=0; idx < dataReq.length; idx++) {
-                        if(dataReq[idx].id == 'cols') {
-                            this.rowsCols.push(colNo);
-                        } else if(dataReq[idx].id == 'measures') {
-                            this.measuresCols.push(colNo);
-                        }
-                    }
-                }
-            }
 
             this.minValue = null;
             this.maxValue = null;

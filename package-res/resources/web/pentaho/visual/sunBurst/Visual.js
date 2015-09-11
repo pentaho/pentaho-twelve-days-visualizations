@@ -392,29 +392,25 @@ define([
             this.hierarchy = this.buildHierarchy();
         };
 
+        this.getRoleFirstColumnIndex = function(name) {
+            return this.drawSpec[name] ? this.dataTable.getColumnIndexByAttribute(this.drawSpec[name][0]) : -1;
+        };
+
+        this.getRoleColumnIndexes = function(roleName) {
+            var attrNames = this.drawSpec[roleName];
+            return attrNames
+                ? attrNames.map(this.dataTable.getColumnIndexByAttribute, this.dataTable)
+                : [];
+        };
+
         this.buildHierarchy = function() {
 
             // build a hierarchy from the data table provided
             var dataTable = this.dataTable;
-            this.rowsCols = [];
-            this.measureCol = -1;
+            this.rowsCols = this.getRoleColumnIndexes("cols");
+            this.measureCol = this.getRoleFirstColumnIndex("measure");
             this.minValue = null;
             this.maxValue = null;
-
-            // work out which columns the column items and measure are in
-            for(var colNo=0; colNo<this.dataTable.getNumberOfColumns(); colNo++) {
-                var dataReq = this.dataTable.getColumnProperty(colNo,'dataReq');
-                if(dataReq) {
-                    for (var idx=0; idx < dataReq.length; idx++) {
-                        if(dataReq[idx].id == 'cols') {
-                            this.rowsCols.push(colNo);
-                        }
-                        else if(dataReq[idx].id == 'measure') {
-                            this.measureCol = colNo;
-                        }
-                    }
-                }
-            }
 
             var hierarchy = {};
             var itemKey;
@@ -429,7 +425,7 @@ define([
                 var color;
                 for(var rowColIdx=0; rowColIdx<this.rowsCols.length; rowColIdx++) {
                     // process each column
-                    colNo = this.rowsCols[rowColIdx];
+                    var colNo = this.rowsCols[rowColIdx];
                     var rowId = dataTable.getColumnId(colNo);
                     var item = this.dataTable.getFormattedValue(rowNo, colNo);
                     var itemId = this.dataTable.getValue(rowNo, colNo);
@@ -442,13 +438,13 @@ define([
                             this.itemMetas[itemKey] = {};
                             this.itemMetas[itemKey] = {
                                 // stuff for selections
-                                rowId: [rowId],
+                                rowId:   [rowId],
                                 rowItem: [itemId],
-                                colItem: new Array(),
-                                colId: new Array(),
-                                rowIdx: rowNo,
-                                isLeaf: false,
-                                type: 'row',
+                                colItem: [],
+                                colId:   [],
+                                rowIdx:  rowNo,
+                                isLeaf:  false,
+                                type:    'row',
                                 tooltip: itemKey.substr(removeN)
                             };
                             if(rowColIdx == 0) {
@@ -462,8 +458,7 @@ define([
                             color = this.itemMetas[itemKey].color;
                         }
                         branch = branch[item];
-                    }
-                    else if(rowColIdx == this.rowsCols.length-1) {
+                    } else if(rowColIdx == this.rowsCols.length-1) {
                         // this is a leaf node
                         var value = this.dataTable.getValue(rowNo, this.measureCol);
                         if(value == null || typeof value == 'undefined' || value < 0) {
@@ -471,16 +466,15 @@ define([
                             value = 0;
                         }
                         branch[item] = value;
-                        this.itemMetas[itemKey] = {};
                         this.itemMetas[itemKey] = {
                             // stuff for selections
-                            rowIdx: rowNo,
-                            rowId: [rowId],
+                            rowIdx:  rowNo,
+                            rowId:   [rowId],
                             rowItem: [itemId],
-                            colItem: new Array(),
-                            colId: new Array(),
-                            type: 'row',
-                            isLeaf: true,
+                            colItem: [],
+                            colId:   [],
+                            type:    'row',
+                            isLeaf:  true,
                             tooltip: itemKey.substr(removeN) + "<br/>" + this.dataTable.getFormattedValue(rowNo, this.measureCol)
                         };
                         if(colNo == 0) {
@@ -494,7 +488,7 @@ define([
                             this.maxValue = value;
                         } else {
                             this.minValue = Math.min(this.minValue, value);
-                            this.maxValue = Math.max(this.maxValue, value);;
+                            this.maxValue = Math.max(this.maxValue, value);
                         }
                     }
                 }
@@ -517,7 +511,6 @@ define([
                 }
                 var meta = this.itemMetas[itemKey];
                 node.meta = meta;
-
             }
 
             if(this.debug) console.log("hierarchy", this.hierarchy);

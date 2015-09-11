@@ -85,6 +85,13 @@ define([
     };
     */
 
+    CrossFilter.prototype.getRoleColumnIndexes = function(roleName) {
+        var attrNames = this.drawSpec[roleName];
+        return attrNames
+            ? attrNames.map(this.dataTable.getColumnIndexByAttribute, this.dataTable)
+            : [];
+    };
+
     /*
         draw()
 
@@ -144,38 +151,25 @@ define([
         this.selections = drawSpec.highlights;
 
         // local variables
-        var measures = [];
-        var strings = [];
         var idx;
         var columnMap = {};
-        this.rowsCols = [];
-        this.measuresCols = [];
 
-        var title = '';
-        var measureNo = 0;
-        for(var colNo=0; colNo<this.dataTable.getNumberOfColumns(); colNo++) {
-            var dataReq = this.dataTable.getColumnProperty(colNo,'dataReq');
-            if(dataReq) {
-                for(idx=0; idx < dataReq.length; idx++) {
-                    if(dataReq[idx].id == 'rows') {
-                        this.rowsCols.push(colNo);
-                        title = this.dataTable.getColumnLabel(colNo);
-                        columnMap[colNo] = [title];
-                        strings.push(colNo);
-                    } else if(dataReq[idx].id == 'measures') {
-                        this.measuresCols.push(colNo);
-                        measures.push(colNo);
-                        title = this.dataTable.getColumnLabel(colNo);
-                        columnMap[colNo] = [title,'measure'+measureNo];
-                        measureNo++;
-                    }
-                }
-            }
-        }
+        this.rowsCols     = this.getRoleColumnIndexes("rows");
+        this.measuresCols = this.getRoleColumnIndexes("measures");
 
-        var rows = [], row;
+        this.rowsCols.forEach(function(index) {
+            var title = this.dataTable.getColumnLabel(index);
+            columnMap[index] = [title];
+        }, this);
+
+        this.measuresCols.forEach(function(index, measureIndex) {
+            var title = this.dataTable.getColumnLabel(index);
+            columnMap[index] = [title, 'measure' + measureIndex];
+        }, this);
+
+        var rows = [];
         for(var rowNo=0; rowNo < this.dataTable.getNumberOfRows(); rowNo++) {
-            row = {};
+            var row = {};
             for(var colNo = 0; colNo < this.dataTable.getNumberOfColumns(); colNo++) {
                 var mapping = columnMap[colNo];
                 for(var mapNo = 0; mapNo < mapping.length; mapNo++) {
@@ -195,11 +189,10 @@ define([
         }
 
         // create dimensions
-        for(idx=0; idx<measures.length; idx++) {
+        for(idx = 0; idx < this.measuresCols.length; idx++) {
             var func = this.dimensionFunctions[idx];
-            var dimension = this.crossf.dimension(func);
-            this.dimensions.push(dimension);
-            this.ranges.push(this.dataTable.getColumnRange(measures[idx]));
+            this.dimensions.push(this.crossf.dimension(func));
+            this.ranges.push(this.dataTable.getColumnRange(this.measuresCols[idx]));
         }
 
         this._all = this.crossf.groupAll();
@@ -210,7 +203,7 @@ define([
             };
         };
 
-        for(idx=0; idx<this.dimensions.length; idx++) {
+        for(idx = 0; idx < this.dimensions.length; idx++) {
             var range = this.ranges[idx].max - this.ranges[idx].min;
             var bucket = range/100;
             // adjust bucket to nearest 1,2,5,10,20,50 etc
@@ -246,7 +239,7 @@ define([
             span.className = 'chartTitle';
             span.style.font = this.labelFontStr;
             span.style.color = this.labelColor;
-            span.innerHTML = this.dataTable.getColumnLabel(measures[idx]);
+            span.innerHTML = this.dataTable.getColumnLabel(this.measuresCols[idx]);
             cell.appendChild(span);
 
             span = document.createElement('SPAN');

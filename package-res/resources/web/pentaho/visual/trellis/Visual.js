@@ -346,27 +346,22 @@ define([
             if(this.debug) console.log('Trellis.done()');
         };
 
-        this.processData = function() {
-            this.rowsCols = [];
-            this.colorByCol = -1;
-            this.measuresCols = [];
-            this.measures = [];
+        this.getRoleFirstColumnIndex = function(name) {
+            return this.drawSpec[name] ? this.dataTable.getColumnIndexByAttribute(this.drawSpec[name][0]) : -1;
+        };
 
-            for(var colNo=0; colNo<this.dataTable.getNumberOfColumns(); colNo++) {
-                var dataReq = this.dataTable.getColumnProperty(colNo,'dataReq');
-                if(dataReq) {
-                    for (var idx=0; idx < dataReq.length; idx++) {
-                        if(dataReq[idx].id == 'cols') {
-                            this.rowsCols.push(colNo);
-                        } else if(dataReq[idx].id == 'measures') {
-                            this.measuresCols.push(colNo);
-                            this.measures.push(this.dataTable.getColumnLabel(colNo));
-                        } else if(dataReq[idx].id == 'colorby') {
-                            this.colorByCol = colNo;
-                        }
-                    }
-                }
-            }
+        this.getRoleColumnIndexes = function(roleName) {
+            var attrNames = this.drawSpec[roleName];
+            return attrNames
+                ? attrNames.map(this.dataTable.getColumnIndexByAttribute, this.dataTable)
+                : [];
+        };
+
+        this.processData = function() {
+            this.rowsCols = this.getRoleColumnIndexes("cols");
+            this.colorByCol = this.getRoleFirstColumnIndex("colorby");
+            this.measuresCols = this.getRoleColumnIndexes("measures");
+            this.measures = this.measuresCols.map(this.dataTable.getColumnLabel, this.dataTable);
 
             if(this.colorByCol != -1) {
                 this.colorBy    = this.dataTable.getDistinctFormattedValues(this.colorByCol);

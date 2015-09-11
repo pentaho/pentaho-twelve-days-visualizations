@@ -361,25 +361,22 @@ define([
 
         this.init();
 
+        this.getRoleFirstColumnIndex = function(name) {
+            return this.drawSpec[name] ? this.dataTable.getColumnIndexByAttribute(this.drawSpec[name][0]) : -1;
+        };
+
+        this.getRoleColumnIndexes = function(roleName) {
+            var attrNames = this.drawSpec[roleName];
+            return attrNames
+                ? attrNames.map(this.dataTable.getColumnIndexByAttribute, this.dataTable)
+                : [];
+        };
+
         this.buildHierarchy = function() {
-            this.rowsCols = [];
-            this.measureCol = -1;
+            this.rowsCols = this.getRoleColumnIndexes("cols");
+            this.measureCol = this.getRoleFirstColumnIndex("measure");
             this.minValue = null;
             this.maxValue = null;
-
-            for(var colNo=0; colNo<this.dataTable.getNumberOfColumns(); colNo++) {
-                var dataReq = this.dataTable.getColumnProperty(colNo,'dataReq');
-                if(dataReq) {
-                    for (var idx=0; idx < dataReq.length; idx++) {
-                        if(dataReq[idx].id == 'cols') {
-                            this.rowsCols.push(colNo);
-                        }
-                        else if(dataReq[idx].id == 'measure') {
-                            this.measureCol = colNo;
-                        }
-                    }
-                }
-            }
 
             var hierarchy = {};
             var itemKey;
@@ -401,18 +398,18 @@ define([
                         // this is an parent level
                         if(!branch[item]) {
                             branch[item] = {};
-                            this.itemMetas[itemKey] = {};
                             this.itemMetas[itemKey] = {
                                 // stuff for selections
                                 rowIdx: rowNo,
                                 rowId: [rowId],
                                 rowItem: [itemId],
-                                colItem: new Array(),
-                                colId: new Array(),
+                                colItem: [],
+                                colId: [],
                                 type: 'row',
                                 tooltip: tooltip,
                                 level: colNo
                             };
+
                             if(colNo == 0) {
                                 color = this.colors[topLevelCount % this.colors.length];
                                 this.itemMetas[itemKey].color = color;
@@ -422,9 +419,7 @@ define([
                             }
                         }
                         branch = branch[item];
-
-                    }
-                    else if(colNo == this.rowsCols.length-1) {
+                    } else if(colNo == this.rowsCols.length-1) {
                         // this is the lowest level
                         var value = this.dataTable.getValue(rowNo, this.measureCol);
                         if(value == null || typeof value == 'undefined' || value < 0) {

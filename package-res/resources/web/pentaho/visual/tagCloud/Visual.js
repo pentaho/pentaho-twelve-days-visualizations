@@ -48,6 +48,17 @@ define([
         this.init();
     }
 
+    TagCloud.prototype.getRoleFirstColumnIndex = function(name) {
+        return this.drawSpec[name] ? this.dataTable.getColumnIndexByAttribute(this.drawSpec[name][0]) : -1;
+    };
+
+    TagCloud.prototype.getRoleColumnIndexes = function(roleName) {
+        var attrNames = this.drawSpec[roleName];
+        return attrNames
+            ? attrNames.map(this.dataTable.getColumnIndexByAttribute, this.dataTable)
+            : [];
+    };
+
     /*
         draw()
 
@@ -79,26 +90,9 @@ define([
 
         this.data = [];
 
-        this.rowsCols = [];
-        this.colorCol = -1;
-        this.sizeCol = -1;
-
-        for(var colNo=0; colNo<this.dataTable.getNumberOfColumns(); colNo++) {
-            var dataReq = this.dataTable.getColumnProperty(colNo,'dataReq');
-            if(dataReq) {
-                for (var idx=0; idx < dataReq.length; idx++) {
-                    if(dataReq[idx].id == 'rows') {
-                        this.rowsCols.push(colNo);
-                    }
-                    else if(dataReq[idx].id == 'colorby') {
-                        this.colorCol = colNo;
-                    }
-                    else if(dataReq[idx].id == 'sizeby') {
-                        this.sizeCol = colNo;
-                    }
-                }
-            }
-        }
+        this.rowsCols = this.getRoleColumnIndexes("rows");
+        this.colorCol = this.getRoleFirstColumnIndex("colorby");
+        this.sizeCol = this.getRoleFirstColumnIndex("sizeby");
 
         this.minSize = null;
         this.maxSize = null;
