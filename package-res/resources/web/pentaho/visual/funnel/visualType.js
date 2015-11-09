@@ -29,7 +29,7 @@ define([
             reqs :
                 [
                   {
-                    id: 'cols', // Needed by Analyzer to indicate to render to column (and not rows)
+                    id: 'cols',
                     dataType: 'string',
                     dataStructure: 'column',
                     caption: 'points',

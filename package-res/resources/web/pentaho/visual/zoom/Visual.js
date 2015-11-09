@@ -72,7 +72,7 @@ define([
             'February':2,
             'March':3,
             'April':4,
-            'May':5,
+            //'May':5,
             'June':6,
             'July':7,
             'August':8,
@@ -121,56 +121,6 @@ define([
 
         var isArea = this.contextChartType == 'area';
         var isLine = this.contextChartType == 'line';
-
-        this.data = [];
-
-        this.rowsCols = [];
-        this.measureCols = [];
-
-        for(var colNo=0; colNo<this.dataTable.getNumberOfColumns(); colNo++) {
-            var dataReq = this.dataTable.getColumnProperty(colNo,'dataReq');
-            if(dataReq) {
-                for (var idx=0; idx < dataReq.length; idx++) {
-                    if(dataReq[idx].id == 'rows') {
-                        this.rowsCols.push(colNo);
-                    }
-                    else if(dataReq[idx].id == 'measures') {
-                        this.measureCols.push(colNo);
-                        this.data.push([]);
-                    }
-                }
-            }
-        }
-
-        var min = null;
-        var max = null;
-        for(var rowNo=0; rowNo<this.dataTable.getNumberOfRows(); rowNo++) {
-            // create the label
-            var label = '';
-            for(var colNo=0; colNo< this.rowsCols.length; colNo++) {
-                if(colNo > 0) label += '~';
-                label += this.dataTable.getFormattedValue(rowNo, colNo);
-            }
-
-            for(var colNo=0; colNo< this.measureCols.length; colNo++) {
-                var item = {
-                    x: rowNo,
-                    label: label,
-                    y: this.dataTable.getValue(rowNo,this.measureCols[colNo]),
-                    idx: rowNo,
-                    tooltip: label + "<br/>" + this.dataTable.getFormattedValue(rowNo,this.measureCols[colNo])
-                };
-
-                this.data[colNo].push(item);
-                if(min == null) {
-                    min = item.y;
-                    max = item.y;
-                } else {
-                    min = Math.min(min, item.y);
-                    max = Math.max(max, item.y);
-                }
-            }
-        }
 
         this.processData();
 
@@ -453,41 +403,32 @@ define([
         this.doResize = false;
     };
 
+    Zoom.prototype.getRoleFirstColumnIndex = function(name) {
+        return this.drawSpec[name] ? this.dataTable.getColumnIndexByAttribute(this.drawSpec[name][0]) : -1;
+    };
+
+    Zoom.prototype.getRoleColumnIndexes = function(roleName) {
+        var attrNames = this.drawSpec[roleName];
+        return attrNames
+            ? attrNames.map(this.dataTable.getColumnIndexByAttribute, this.dataTable)
+            : [];
+    };
+
     Zoom.prototype.processData = function() {
 
         if(this.debug) console.log('Zoom.processData()');
 
-        this.dateCol = -1;
-        this.yearCol = -1;
-        this.monthCol = -1;
-        this.dayCol = -1;
-        this.data = [];
-        this.measureCols = [];
+        this.rowsCols = this.getRoleColumnIndexes("rows");
+        this.measureCols = this.getRoleColumnIndexes("measures");
+        this.data = this.measureCols.map(function() { return []; });
+
+        this.dateCol = this.getRoleFirstColumnIndex("date");
+        this.yearCol = this.getRoleFirstColumnIndex("year");
+        this.monthCol = this.getRoleFirstColumnIndex("month");
+        this.dayCol = this.getRoleFirstColumnIndex("day");
+
         this.min = null;
         this.max = null;
-        for(var colNo=0; colNo<this.dataTable.getNumberOfColumns(); colNo++) {
-            var dataReq = this.dataTable.getColumnProperty(colNo,'dataReq');
-            if(dataReq) {
-                for (var idx=0; idx < dataReq.length; idx++) {
-                    if(dataReq[idx].id == 'date') {
-                        this.dateCol = colNo;
-                    }
-                    else if(dataReq[idx].id == 'year') {
-                        this.yearCol = colNo;
-                    }
-                    else if(dataReq[idx].id == 'month') {
-                        this.monthCol = colNo;
-                    }
-                    else if(dataReq[idx].id == 'day') {
-                        this.dayCol = colNo;
-                    }
-                    else if(dataReq[idx].id == 'measures') {
-                        this.measureCols.push(colNo);
-                        this.data.push([]);
-                    }
-                }
-            }
-        }
 
         for(var rowNo=0; rowNo<this.dataTable.getNumberOfRows(); rowNo++) {
             var year, month, day, date, dateObj;

@@ -434,28 +434,23 @@ define([
             if(this.debug) console.log('init: done');
         };
 
-        this.processData = function() {
-            var rowsNos = [];
-            var colsNos = [];
-            var measureCol = -1;
-            var values;
+        this.getRoleColumnIndexes = function(roleName) {
+            var attrNames = this.drawSpec[roleName];
+            return attrNames
+                ? attrNames.map(this.dataTable.getColumnIndexByAttribute, this.dataTable)
+                : [];
+        };
 
-            for(var colNo=0; colNo<this.dataTable.getNumberOfColumns(); colNo++) {
-                var dataReq = this.dataTable.getColumnProperty(colNo,'dataReq');
-                if(dataReq) {
-                    for (var idx=0; idx < dataReq.length; idx++) {
-                        if(dataReq[idx].id == 'rows') {
-                            rowsNos.push(colNo);
-                        }
-                        else if(dataReq[idx].id == 'cols') {
-                            colsNos.push(colNo);
-                        }
-                        else if(dataReq[idx].id == 'measure') {
-                            measureCol = colNo;
-                        }
-                    }
-                }
-            }
+        this.getRoleFirstColumnIndex = function(roleName) {
+            return this.drawSpec[roleName]
+                ? this.dataTable.getColumnIndexByAttribute(this.drawSpec[roleName][0])
+                : -1;
+        };
+
+        this.processData = function() {
+            var rowsNos = this.getRoleColumnIndexes("rows");
+            var colsNos = this.getRoleColumnIndexes("cols");
+            var measureCol = this.getRoleFirstColumnIndex("measure");
 
             this.column1Names = [];
             this.column1Ids = [];
@@ -464,6 +459,8 @@ define([
 
             var rowsDistinct = [];
             var colsDistinct = [];
+
+            var values;
 
             // see if any of the columns have only one value
             for(var idx=0; idx<rowsNos.length; idx++) {

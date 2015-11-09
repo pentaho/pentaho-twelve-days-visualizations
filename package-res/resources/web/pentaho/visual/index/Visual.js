@@ -60,6 +60,10 @@ define([
         this.yAxisLabel = 'Realtive Change';
         this.titleBase = 'Comparison for:';
 
+        this.getRoleFirstColumnIndex = function(name) {
+            return this.drawSpec[name] ? this.dataTable.getColumnIndexByAttribute(this.drawSpec[name][0]) : -1;
+        };
+
         this.draw = function(dataTable, drawSpec) {
             if(this.debug) console.log('Index.draw()');
             this.dataTable = dataTable;
@@ -80,8 +84,12 @@ define([
                 this.totalMarginWidth = this.leftMargin + this.rightMargin;
             }
 
-            this.seriesNames   = dataTable.getDistinctFormattedValues(1);
-            this.categoryNames = dataTable.getDistinctFormattedValues(0);
+            this.seriesCol = this.getRoleFirstColumnIndex("cols");
+            this.categCol = this.getRoleFirstColumnIndex("rows");
+            this.valueCol = this.getRoleFirstColumnIndex("measure");
+
+            this.seriesNames = dataTable.getDistinctFormattedValues(this.seriesCol);
+            this.categoryNames = dataTable.getDistinctFormattedValues(this.categCol);
 
             var seriesMap = {};
             for(var idx=0; idx<this.seriesNames.length; idx++) {
@@ -97,8 +105,8 @@ define([
 
             this.dataGrid = new Array(this.seriesNames.length);
             for(var rowNo=0; rowNo<this.dataTable.getNumberOfRows(); rowNo++) {
-                var series = this.dataTable.getFormattedValue(rowNo,1);
-                var category = this.dataTable.getFormattedValue(rowNo,0);
+                var series = this.dataTable.getFormattedValue(rowNo, this.seriesCol);
+                var category = this.dataTable.getFormattedValue(rowNo, this.categCol);
                 var seriesNo = seriesMap[series];
                 var categoryNo = categoryMap[category];
                 var arr = this.dataGrid[seriesNo];
@@ -109,7 +117,7 @@ define([
                     }
                     this.dataGrid[seriesNo] = arr;
                 }
-                var value = this.dataTable.getValue(rowNo,2);
+                var value = this.dataTable.getValue(rowNo, this.valueCol);
                 arr[categoryNo] = value;
             }
 
