@@ -103,6 +103,7 @@ pen.define([
                   {   id: "gradient1",
                     dataType: 'string',
                     value: {
+                      v : "1",
                       color1: "red",
                       color2: "yellow",
                       color3: "green",
