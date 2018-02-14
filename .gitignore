@@ -1,8 +1,0 @@
-bin/
-dist/
-lib/
-dev-lib/
-test-lib/
-/documentation/spec.html
-!/package-res/resources/web/lib/
-.idea
